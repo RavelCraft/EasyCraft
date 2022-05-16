@@ -1,0 +1,86 @@
+name: EasyCraft
+main: com.github.imdabigboss.easycraft.EasyCraft
+version: 1.11
+api-version: 1.15
+
+commands:
+  maintenance:
+    permission: easycraft.maintenance
+  setmaxplayers:
+    permission: easycraft.setmaxplayers
+  confupdate:
+    permission: easycraft.confupdate
+  perks:
+    permission: easycraft.perks
+  enderchest:
+    permission: easycraft.enderchest
+  miniblock:
+    permission: easycraft.miniblock
+  spawn:
+    permission: easycraft.spawn
+  suicide:
+    permission: easycraft.suicide
+  headitem:
+    permission: easycraft.headitem
+
+  home:
+    permission: easycraft.home
+  sethome:
+    permission: easycraft.sethome
+  delhome:
+    permission: easycraft.delhome
+
+  tpa:
+    permission: easycraft.tpa
+  tpahere:
+    permission: easycraft.tpahere
+  tpaccept:
+    permission: easycraft.tpaccept
+  tpdeny:
+    permission: easycraft.tpdeny
+ 
+permissions:
+  easycraft.maintenance:
+    default: op
+  easycraft.maintenance.bypass:
+    default: op
+  easycraft.setmaxplayers:
+    default: op
+  easycraft.confupdate:
+    default: op
+  easycraft.perks:
+    default: true
+  easycraft.perks.admin:
+    default: op
+  easycraft.enderchest:
+    default: true
+
+  easycraft.spawn:
+    default: true
+
+  easycraft.suicide:
+    default: true
+
+  easycraft.headitem:
+    default: true
+
+  easycraft.home:
+    default: true
+  easycraft.sethome:
+    default: true
+  easycraft.gethome:
+    default: op
+  easycraft.delhome:
+    default: true
+
+  easycraft.tpa:
+    default: true
+  easycraft.tpahere:
+    default: true
+  easycraft.tpaccept:
+    default: true
+  easycraft.tpdeny:
+    default: true
+
+  easycraft.miniblock:
+    default: true

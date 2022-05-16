@@ -1,0 +1,16 @@
+maintenance: off #This is if the maintenance option is enabled (set to 'on' to enable), BEWARE! ONLY OPs CAN JOIN IF ENABLED
+
+serverName: MyServer!
+
+commands:
+  homes: true
+  spawn: true
+  tpa: true
+  suicide: true
+  headitem: true
+  miniblock: true
+
+dropPlayerHeadOnKill: true
+
+tpa-keep-alive: 30 #in secounds
+confupdate-stop: 30 #in seconds
