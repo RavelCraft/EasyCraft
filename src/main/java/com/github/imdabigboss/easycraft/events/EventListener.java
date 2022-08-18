@@ -7,6 +7,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -19,13 +20,11 @@ import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
 import org.bukkit.scoreboard.Team;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class EventListener implements Listener {
 	private final EasyCraft plugin = EasyCraft.getInstance();
-	private final Map<String, ItemStack> shouldHavePerkItem = new HashMap<>();
+	private final Map<UUID, ItemStack[]> shouldHavePerkItem = new HashMap<>();
 
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent event) {
@@ -67,27 +66,37 @@ public class EventListener implements Listener {
 
 	@EventHandler
 	public void onPlayerDeath(PlayerDeathEvent event) {
-		ItemStack perkItem = null;
+		Player player = event.getEntity();
+		List<ItemStack> undroppableItems = new ArrayList<>();
+
 		for (ItemStack item : event.getDrops()) {
 			if (EasyCraft.getPerksManager().isUndroppable(item)) {
-				perkItem = item.clone();
+				undroppableItems.add(item);
 			}
 		}
 
-		Player player = event.getEntity();
-		if (perkItem != null) {
-			event.getDrops().remove(perkItem);
-			shouldHavePerkItem.put(player.getName(), perkItem);
+		List<ItemStack> addToInventory = new ArrayList<>();
+
+		for (ItemStack item : undroppableItems) {
+			event.getDrops().remove(item);
+			addToInventory.add(item.clone());
 		}
+
+		this.shouldHavePerkItem.remove(player.getUniqueId());
+		this.shouldHavePerkItem.put(player.getUniqueId(), addToInventory.toArray(new ItemStack[0]));
 	}
 
 	@EventHandler
 	public void onPlayerRespawn(PlayerRespawnEvent event) {
-		String playerName = event.getPlayer().getName();
-		if (shouldHavePerkItem.containsKey(playerName)) {
-			event.getPlayer().getInventory().addItem(shouldHavePerkItem.get(playerName));
-			shouldHavePerkItem.remove(playerName);
+		Player player = event.getPlayer();
+
+		if (this.shouldHavePerkItem.containsKey(player.getUniqueId())) {
+			for (ItemStack item : this.shouldHavePerkItem.get(player.getUniqueId())) {
+				player.getInventory().addItem(item);
+			}
 		}
+
+		this.shouldHavePerkItem.remove(player.getUniqueId());
 	}
 
 	@EventHandler

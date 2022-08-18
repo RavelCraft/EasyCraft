@@ -22,6 +22,8 @@ public class PerksManager {
 		this.registerPerk(new ArrivalAnouncePerk());
 		this.registerPerk(new FireworkLauncher());
 		this.registerPerk(new CapePerk());
+		this.registerPerk(new PlayerPickeruppaPerk());
+		this.registerPerk(new EntityInabukketPerk());
 	}
 
 	private void registerPerk(RavelPerk perk) {

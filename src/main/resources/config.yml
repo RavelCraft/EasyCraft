@@ -12,7 +12,7 @@ commands:
 
 dropPlayerHeadOnKill: true
 
-tpa-keep-alive: 30 #in secounds
+tpa-keep-alive: 30 #in seconds
 confupdate-stop: 30 #in seconds
 
 enable1984: false

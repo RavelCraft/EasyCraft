@@ -10,10 +10,13 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class FireworkLauncher extends RavelPerk implements Listener {
@@ -40,6 +43,12 @@ public class FireworkLauncher extends RavelPerk implements Listener {
 
         ItemMeta meta = item.getItemMeta();
         meta.displayName(Component.text(ChatColor.AQUA + "Firework Launcher"));
+
+        List<Component> lore = new ArrayList<>();
+        lore.add(Component.text(ChatColor.GRAY + "Right-click to launch a"));
+        lore.add(Component.text(ChatColor.GRAY + "firework."));
+        meta.lore(lore);
+
         meta.setCustomModelData(CUSTOM_MODEL_DATA);
         item.setItemMeta(meta);
 
@@ -62,9 +71,14 @@ public class FireworkLauncher extends RavelPerk implements Listener {
 
     @EventHandler
     public void onPlayerInteractEvent(PlayerInteractEvent event) {
+        if (event.getHand() != EquipmentSlot.HAND) {
+            return;
+        }
+
         if (event.getAction() != Action.RIGHT_CLICK_BLOCK && event.getAction() != Action.RIGHT_CLICK_AIR) {
             return;
         }
+
         if (event.getItem() != null && event.getItem().getType() == Material.STICK && event.getItem().hasItemMeta() && event.getItem().getItemMeta().hasCustomModelData() && event.getItem().getItemMeta().getCustomModelData() == CUSTOM_MODEL_DATA) {
             Player player = event.getPlayer();
             Location target = player.getTargetBlock(5).getLocation().add(0, 1, 0);
@@ -96,6 +110,9 @@ public class FireworkLauncher extends RavelPerk implements Listener {
 
     @Override
     public boolean isUndroppable(ItemStack item) {
-        return false;
+        return item.getType() == Material.STICK &&
+                item.hasItemMeta() &&
+                item.getItemMeta().hasCustomModelData() &&
+                item.getItemMeta().getCustomModelData() == CUSTOM_MODEL_DATA;
     }
 }
