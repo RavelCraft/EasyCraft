@@ -14,3 +14,8 @@ dropPlayerHeadOnKill: true
 
 tpa-keep-alive: 30 #in secounds
 confupdate-stop: 30 #in seconds
+
+enable1984: false
+enable1984-path: /var/www/db/ravellogs/server
+
+capes-path: /var/www/db/capes

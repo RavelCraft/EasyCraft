@@ -4,6 +4,7 @@ import com.github.imdabigboss.easycraft.EasyCraft;
 import com.github.imdabigboss.easycraft.perks.*;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
 
@@ -18,6 +19,9 @@ public class PerksManager {
 		this.registerPerk(new EnderchestPerk());
 		this.registerPerk(new SuperCatPerk());
 		this.registerPerk(new SuperDogPerk());
+		this.registerPerk(new ArrivalAnouncePerk());
+		this.registerPerk(new FireworkLauncher());
+		this.registerPerk(new CapePerk());
 	}
 
 	private void registerPerk(RavelPerk perk) {
@@ -70,16 +74,15 @@ public class PerksManager {
 
 			boolean alreadyHadPerk = false;
 			if (this.playerHasPerk(player.getUniqueId(), perk.getName())) {
-				if (playerLevel == -1) {
-					if (perk.canBuyMultiple()) {
-						alreadyHadPerk = true;
+				if (!perk.canBuyMultiple()) {
+					if (playerLevel == -1) {
+						player.sendMessage(ChatColor.YELLOW + "This perk is only meant to be purchased once!");
 					} else {
-						player.sendMessage(ChatColor.RED + "You can only get this perk once!");
+						player.sendMessage(ChatColor.RED + "You already have this perk!");
 						return true;
 					}
 				} else {
-					player.sendMessage(ChatColor.RED + "You already have this perk!");
-					return true;
+					alreadyHadPerk = true;
 				}
 			}
 
@@ -93,6 +96,8 @@ public class PerksManager {
 					this.config.getConfig().set(player.getUniqueId() + ".perks", playerPerks);
 					this.config.saveConfig();
 				}
+			} else {
+				player.sendMessage(ChatColor.RED + "Perk purchase failed.");
 			}
 		}
 
@@ -125,5 +130,15 @@ public class PerksManager {
 		}
 
 		return perks;
+	}
+
+	public boolean isUndroppable(ItemStack item) {
+		for (RavelPerk perk : this.listPerks()) {
+			if (perk.isUndroppable(item)) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 }

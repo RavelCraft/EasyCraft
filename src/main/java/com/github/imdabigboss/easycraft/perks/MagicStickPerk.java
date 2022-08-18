@@ -13,7 +13,7 @@ public class MagicStickPerk extends RavelPerk {
     public static final int CUSTOM_MODEL_DATA = 502698;
 
     public MagicStickPerk() {
-        super(NAME, 1, true);
+        super(NAME, 1, false);
     }
 
     @Override
@@ -40,5 +40,13 @@ public class MagicStickPerk extends RavelPerk {
         }
 
         return true;
+    }
+
+    @Override
+    public boolean isUndroppable(ItemStack item) {
+        return item.getType() == Material.STICK &&
+                item.hasItemMeta() &&
+                item.getItemMeta().hasCustomModelData() &&
+                item.getItemMeta().getCustomModelData() == CUSTOM_MODEL_DATA;
     }
 }

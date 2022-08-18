@@ -101,6 +101,11 @@ public class CommandPerks implements CommandExecutor, TabExecutor {
 						sender.sendMessage(ChatColor.YELLOW + "Be careful! You set the perk level to -1! This means that they will have unlimited perks!");
 					}
 
+					int oldLevel = this.perksManager.getPlayerLevel(uuid);
+					if (oldLevel > level && level != -1) {
+						sender.sendMessage(ChatColor.YELLOW + "Be careful! You are lowering the perk level of " + args[2] + " from " + oldLevel + " to " + level + "! Make sure to remove higher perks.");
+					}
+
 					this.perksManager.setPlayerLevel(uuid, level);
 					sender.sendMessage(ChatColor.AQUA + "Successfully set " + args[2] + "'s perk level to " + level);
 				} else {

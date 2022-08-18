@@ -1,6 +1,7 @@
 package com.github.imdabigboss.easycraft.perks;
 
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 public abstract class RavelPerk {
     private final String name;
@@ -26,4 +27,6 @@ public abstract class RavelPerk {
     }
 
     public abstract boolean getPerk(Player player, String[] args);
+
+    public abstract boolean isUndroppable(ItemStack item);
 }

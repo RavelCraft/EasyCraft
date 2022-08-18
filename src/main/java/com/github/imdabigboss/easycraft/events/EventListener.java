@@ -1,8 +1,10 @@
 package com.github.imdabigboss.easycraft.events;
 
 import com.github.imdabigboss.easycraft.EasyCraft;
+import com.github.imdabigboss.easycraft.managers.PluginMessageManager;
 import com.github.imdabigboss.easycraft.utils.StringUtils;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.ItemFrame;
@@ -13,13 +15,17 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.ScoreboardManager;
+import org.bukkit.scoreboard.Team;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 public class EventListener implements Listener {
 	private final EasyCraft plugin = EasyCraft.getInstance();
-	private Map<String, ItemStack> shouldHaveMagicStick = new HashMap<>();
+	private final Map<String, ItemStack> shouldHavePerkItem = new HashMap<>();
 
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent event) {
@@ -34,8 +40,9 @@ public class EventListener implements Listener {
 			this.plugin.getServer().broadcast(Component.text("There is now " + ChatColor.RED + this.plugin.getServer().getOnlinePlayers().size() + ChatColor.RESET + " players connected, maybe a few players could leave to free up space for other players wanting to join!"));
 		}
 
-		EasyCraft.getPluginMessageManager().sendCmd(player, "playerjoined", player.getUniqueId().toString());
 		event.joinMessage(Component.text(ChatColor.YELLOW + player.getName() + " joined the server"));
+
+		EasyCraft.getPluginMessageManager().readQueuedPluginMessages();
 	}
 
 	@EventHandler
@@ -60,32 +67,37 @@ public class EventListener implements Listener {
 
 	@EventHandler
 	public void onPlayerDeath(PlayerDeathEvent event) {
-		ItemStack stick = null;
+		ItemStack perkItem = null;
 		for (ItemStack item : event.getDrops()) {
-			if (item.getType() == Material.STICK && item.hasItemMeta() && item.getItemMeta().hasCustomModelData() && item.getItemMeta().getCustomModelData() == 502698) {
-				stick = item.clone();
+			if (EasyCraft.getPerksManager().isUndroppable(item)) {
+				perkItem = item.clone();
 			}
 		}
 
 		Player player = event.getEntity();
-		if (stick != null) {
-			event.getDrops().remove(stick);
-			shouldHaveMagicStick.put(player.getName(), stick);
+		if (perkItem != null) {
+			event.getDrops().remove(perkItem);
+			shouldHavePerkItem.put(player.getName(), perkItem);
 		}
 	}
 
 	@EventHandler
 	public void onPlayerRespawn(PlayerRespawnEvent event) {
 		String playerName = event.getPlayer().getName();
-		if (shouldHaveMagicStick.containsKey(playerName)) {
-			event.getPlayer().getInventory().addItem(shouldHaveMagicStick.get(playerName));
-			shouldHaveMagicStick.remove(playerName);
+		if (shouldHavePerkItem.containsKey(playerName)) {
+			event.getPlayer().getInventory().addItem(shouldHavePerkItem.get(playerName));
+			shouldHavePerkItem.remove(playerName);
 		}
 	}
 
 	@EventHandler
 	public void chatFormat(AsyncPlayerChatEvent event) {
 		Player p = event.getPlayer();
-		event.setFormat(ChatColor.WHITE + StringUtils.componentToString(p.displayName()) + ChatColor.WHITE + ": " + event.getMessage());
+		event.getRecipients().clear(); //Don't cancel the event so that the server can log the message
+		event.setFormat(p.getName() + ": " + event.getMessage());
+
+		for (Player player : this.plugin.getServer().getOnlinePlayers()) {
+			player.sendMessage(ChatColor.WHITE + StringUtils.componentToString(p.displayName()) + ChatColor.WHITE + ": " + event.getMessage());
+		}
 	}
 }

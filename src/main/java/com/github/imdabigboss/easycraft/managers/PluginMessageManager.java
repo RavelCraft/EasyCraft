@@ -12,17 +12,19 @@ import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
 import org.bukkit.scoreboard.Team;
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.UUID;
 
 public class PluginMessageManager implements PluginMessageListener {
-    public static final String CHANNEL_ID = "imdabigboss:main";
+    private static final String CHANNEL_ID = "imdabigboss:main";
+    private static final String CHANNEL_NAME = "EasyCMD";
+
+    private final Queue<PluginMessageData> pluginMessageQueue = new LinkedList<>();
 
     public PluginMessageManager() {
-        EasyCraft.getInstance().getServer().getMessenger().registerIncomingPluginChannel(EasyCraft.getInstance(), PluginMessageManager.CHANNEL_ID, this);
-        EasyCraft.getInstance().getServer().getMessenger().registerOutgoingPluginChannel(EasyCraft.getInstance(), PluginMessageManager.CHANNEL_ID);
+        EasyCraft.getInstance().getServer().getMessenger().registerIncomingPluginChannel(EasyCraft.getInstance(), CHANNEL_ID, this);
+        EasyCraft.getInstance().getServer().getMessenger().registerOutgoingPluginChannel(EasyCraft.getInstance(), CHANNEL_ID);
     }
 
     public void unregister() {
@@ -31,92 +33,106 @@ public class PluginMessageManager implements PluginMessageListener {
 
     @Override
     public void onPluginMessageReceived(String channel, Player player, byte[] bytes) {
-        //EasyCraft.getLog().info("Plugin Message Received " + channel);
-
         if (channel.equalsIgnoreCase(CHANNEL_ID)) {
             ByteArrayDataInput in = ByteStreams.newDataInput(bytes);
             String subChannel = in.readUTF();
-            if (subChannel.equalsIgnoreCase("EasyCMD")) {
+            if (subChannel.equalsIgnoreCase(CHANNEL_NAME)) {
                 String cmd = in.readUTF();
                 String data = in.readUTF();
-                this.runBungeeCmd(cmd, data);
+                UUID uuid = UUID.fromString(in.readUTF());
+
+                PluginMessageData messageData = new PluginMessageData(cmd, data, uuid);
+                Player target = EasyCraft.getInstance().getServer().getPlayer(uuid);
+                if (target == null) {
+                    this.pluginMessageQueue.add(messageData);
+                } else {
+                    this.runVelocityCmd(messageData);
+                }
             }
         }
     }
 
-    private void runBungeeCmd(String cmd, String data) {
-        if (cmd.equalsIgnoreCase("setdisplayname")) {
-            String[] dataArray = data.split(";");
+    private void runVelocityCmd(PluginMessageData data) {
+        if (data.cmd().equalsIgnoreCase("setdisplayname")) {
+            if (data.cmd().equalsIgnoreCase("setdisplayname")) {
+                Player player = EasyCraft.getInstance().getServer().getPlayer(data.uuid());
 
-            UUID uuid = UUID.fromString(dataArray[0]);
-            Player player = EasyCraft.getInstance().getServer().getPlayer(uuid);
+                String[] dataArray = data.data().split(";");
+                String rankName = dataArray[0];
+                String color = dataArray[1];
 
-            String rankName = dataArray[1];
-            String color = dataArray[2];
-
-            if (player == null) {
-                EasyCraft.getLog().severe("p");
-                return;
-            }
-
-            String prefix = "";
-            if (rankName.equals("none")) {
-                player.displayName(Component.text(player.getName()));
-                player.customName(Component.text(player.getName()));
-                player.setCustomNameVisible(false);
-            } else {
-                prefix = ChatColor.WHITE + "[" + color + rankName + ChatColor.WHITE + "] ";
-                player.displayName(Component.text(prefix + player.getName()));
-                player.customName(Component.text(prefix + player.getName()));
-                player.setCustomNameVisible(true);
-            }
-
-            ScoreboardManager scoreboardManager = EasyCraft.getInstance().getServer().getScoreboardManager();
-            Scoreboard scoreboard = scoreboardManager.getMainScoreboard();
-
-            boolean teamExists = false;
-            Team playerTeam = null;
-            for (Team team : scoreboard.getTeams()) {
-                if (team.getName().equalsIgnoreCase(rankName)) {
-                    teamExists = true;
-                    playerTeam = team;
+                String prefix = "";
+                if (rankName.equals("none")) {
+                    player.displayName(Component.text(player.getName()));
+                    player.customName(Component.text(player.getName()));
+                    player.setCustomNameVisible(false);
+                } else {
+                    prefix = ChatColor.WHITE + "[" + color + rankName + ChatColor.WHITE + "] ";
+                    player.displayName(Component.text(prefix + player.getName()));
+                    player.customName(Component.text(prefix + player.getName()));
+                    player.setCustomNameVisible(true);
                 }
 
-                if (team.hasEntry(player.getName())) {
-                    team.removeEntry(player.getName());
+                ScoreboardManager scoreboardManager = EasyCraft.getInstance().getServer().getScoreboardManager();
+                Scoreboard scoreboard = scoreboardManager.getMainScoreboard();
+
+                boolean teamExists = false;
+                Team playerTeam = null;
+                for (Team team : scoreboard.getTeams()) {
+                    if (team.getName().equalsIgnoreCase(rankName)) {
+                        teamExists = true;
+                        playerTeam = team;
+                    }
+
+                    if (team.hasEntry(player.getName())) {
+                        team.removeEntry(player.getName());
+                    }
                 }
-            }
 
-            if (rankName.equals("none")) {
-                return;
-            }
+                if (rankName.equals("none")) {
+                    return;
+                }
 
-            if (!teamExists) {
-                playerTeam = scoreboard.registerNewTeam(rankName);
-            }
+                if (!teamExists) {
+                    playerTeam = scoreboard.registerNewTeam(rankName);
+                }
 
-            playerTeam.color(NamedTextColor.WHITE);
-            playerTeam.setAllowFriendlyFire(true);
-            playerTeam.prefix(Component.text(prefix));
-            playerTeam.addEntry(player.getName());
+                playerTeam.color(NamedTextColor.WHITE);
+                playerTeam.setAllowFriendlyFire(true);
+                playerTeam.prefix(Component.text(prefix));
+                playerTeam.addEntry(player.getName());
+            }
         }
     }
 
-    public void sendCmd(Player player, String cmd, String data){
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        DataOutputStream out = new DataOutputStream(bytes);
-        try {
-            out.writeUTF("EasyCMD");
-            out.writeUTF(cmd);
-            out.writeUTF(data);
-        } catch (IOException ignored) {}
+    public void readQueuedPluginMessages() {
+        while (!this.pluginMessageQueue.isEmpty()) {
+            PluginMessageManager.PluginMessageData data = this.pluginMessageQueue.poll();
+            this.runVelocityCmd(data);
+        }
+    }
 
-        player.sendPluginMessage(EasyCraft.getInstance(), CHANNEL_ID, bytes.toByteArray());
-        //EasyCraft.getLog().info("Sent plugin message to " + player.getName() + ": " + cmd + " " + data);
+    private static class PluginMessageData {
+        private final String cmd;
+        private final String data;
+        private final UUID uuid;
 
-        try {
-            out.close();
-            bytes.close();
-        } catch (IOException ignored) {}
+        public PluginMessageData(String cmd, String data, UUID uuid) {
+            this.cmd = cmd;
+            this.data = data;
+            this.uuid = uuid;
+        }
+
+        public String cmd() {
+            return this.cmd;
+        }
+
+        public String data() {
+            return this.data;
+        }
+
+        public UUID uuid() {
+            return this.uuid;
+        }
     }
 }

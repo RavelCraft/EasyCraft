@@ -96,6 +96,10 @@
           <groupId>net.kyori</groupId>
         </exclusion>
         <exclusion>
+          <artifactId>adventure-text-logger-slf4j</artifactId>
+          <groupId>net.kyori</groupId>
+        </exclusion>
+        <exclusion>
           <artifactId>asm</artifactId>
           <groupId>org.ow2.asm</groupId>
         </exclusion>

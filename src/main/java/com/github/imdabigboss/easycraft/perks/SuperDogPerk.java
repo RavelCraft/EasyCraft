@@ -3,6 +3,7 @@ package com.github.imdabigboss.easycraft.perks;
 import com.github.imdabigboss.easycraft.EasyCraft;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 public class SuperDogPerk extends RavelPerk {
     public static final String NAME = "superdog";
@@ -10,7 +11,7 @@ public class SuperDogPerk extends RavelPerk {
     private final EasyCraft plugin = EasyCraft.getInstance();
 
     public SuperDogPerk() {
-        super(NAME, 3, true);
+        super(NAME, 3, false);
     }
 
     @Override
@@ -27,5 +28,10 @@ public class SuperDogPerk extends RavelPerk {
         this.plugin.getServer().dispatchCommand(this.plugin.getServer().getConsoleSender(), command);
 
         return true;
+    }
+
+    @Override
+    public boolean isUndroppable(ItemStack item) {
+        return false;
     }
 }
