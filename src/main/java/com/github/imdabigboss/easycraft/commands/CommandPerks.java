@@ -144,7 +144,11 @@ public class CommandPerks implements CommandExecutor, TabExecutor {
 				}
 			} else if (args.length == 2) {
 				if (args[0].equalsIgnoreCase("get")) {
-					cmds.addAll(this.perksManager.listPerksString());
+					if (sender instanceof Player player) {
+						cmds.addAll(this.perksManager.listPerksString(this.perksManager.getPlayerLevel(player.getUniqueId())));
+					} else {
+						cmds.addAll(this.perksManager.listPerksString(-1));
+					}
 				} else if (args[0].equalsIgnoreCase("admin")) {
 					if (sender.isOp()) {
 						cmds.add("get");

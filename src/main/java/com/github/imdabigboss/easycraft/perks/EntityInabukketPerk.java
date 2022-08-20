@@ -2,8 +2,10 @@ package com.github.imdabigboss.easycraft.perks;
 
 import com.github.imdabigboss.easycraft.EasyCraft;
 import net.kyori.adventure.text.Component;
-import org.bukkit.*;
-import org.bukkit.block.Block;
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
@@ -17,11 +19,10 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
-import org.bukkit.util.io.BukkitObjectOutputStream;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 public class EntityInabukketPerk extends RavelPerk implements Listener {
     public static final String NAME = "entityinabukket";
@@ -32,7 +33,7 @@ public class EntityInabukketPerk extends RavelPerk implements Listener {
     private final List<EntityType> allowedEntities = new ArrayList<>();
 
     public EntityInabukketPerk() {
-        super(NAME, 1, false);
+        super(NAME, 3, false);
 
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
 
@@ -194,7 +195,7 @@ public class EntityInabukketPerk extends RavelPerk implements Listener {
         livingEntity.setRemoveWhenFarAway(false);
         livingEntity.setSilent(true);
 
-        livingEntity.teleport(new Location(player.getWorld(), 0, -67, 0));
+        livingEntity.teleport(new Location(player.getWorld(), 0, player.getWorld().getMinHeight() - 2, 0));
 
         player.sendMessage(ChatColor.AQUA + "You put the entity inabukket!");
     }

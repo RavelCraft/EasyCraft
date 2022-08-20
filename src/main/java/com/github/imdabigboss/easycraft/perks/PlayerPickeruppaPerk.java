@@ -2,10 +2,8 @@ package com.github.imdabigboss.easycraft.perks;
 
 import com.github.imdabigboss.easycraft.EasyCraft;
 import net.kyori.adventure.text.Component;
-import org.bukkit.*;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Item;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -24,7 +22,7 @@ public class PlayerPickeruppaPerk extends RavelPerk implements Listener {
     private final EasyCraft plugin = EasyCraft.getInstance();
 
     public PlayerPickeruppaPerk() {
-        super(NAME, 1, false);
+        super(NAME, 3, false);
 
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }

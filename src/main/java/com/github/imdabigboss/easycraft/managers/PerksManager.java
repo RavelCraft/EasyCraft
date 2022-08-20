@@ -12,7 +12,9 @@ public class PerksManager {
 	private final EasyCraft plugin = EasyCraft.getInstance();
 	private final ConfigManager.YmlConfig config = EasyCraft.getConfig("perks");
 
-	private Map<String, RavelPerk> perks = new HashMap<>();
+	private final Map<String, RavelPerk> perks = new HashMap<>();
+
+	private final Map<UUID, Integer> playerLevels = new HashMap<>();
 
 	public PerksManager() {
 		this.registerPerk(new MagicStickPerk());
@@ -24,6 +26,7 @@ public class PerksManager {
 		this.registerPerk(new CapePerk());
 		this.registerPerk(new PlayerPickeruppaPerk());
 		this.registerPerk(new EntityInabukketPerk());
+		this.registerPerk(new PetPerk());
 	}
 
 	private void registerPerk(RavelPerk perk) {
@@ -36,7 +39,9 @@ public class PerksManager {
 	}
 
 	public int getPlayerLevel(UUID uuid) {
-		if (this.config.getConfig().contains(uuid + ".level")) {
+		if (this.playerLevels.containsKey(uuid)) {
+			return this.playerLevels.get(uuid);
+		} else if (this.config.getConfig().contains(uuid + ".level")) {
 			return this.config.getConfig().getInt(uuid + ".level");
 		}
 
@@ -44,8 +49,12 @@ public class PerksManager {
 	}
 
 	public void setPlayerLevel(UUID uuid, int level) {
+		this.playerLevels.remove(uuid);
+
 		this.config.getConfig().set(uuid + ".level", level);
 		this.config.saveConfig();
+
+		this.playerLevels.put(uuid, level);
 	}
 
 	public List<String> getPlayerPerks(UUID uuid) {
@@ -114,11 +123,13 @@ public class PerksManager {
 		return new ArrayList<>(this.perks.values());
 	}
 
-	public List<String> listPerksString() {
+	public List<String> listPerksString(int level) {
 		List<String> perks = new ArrayList<>();
 
 		for (RavelPerk perk : this.listPerks()) {
-			perks.add(perk.getName());
+			if (perk.getLevel() <= level || level == -1) {
+				perks.add(perk.getName());
+			}
 		}
 
 		return perks;

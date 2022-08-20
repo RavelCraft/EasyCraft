@@ -5,6 +5,8 @@ import com.github.imdabigboss.easycraft.events.EventListener;
 import com.github.imdabigboss.easycraft.events.LobbyEvents;
 import com.github.imdabigboss.easycraft.events.Ravel1984Listener;
 import com.github.imdabigboss.easycraft.managers.*;
+import com.github.imdabigboss.easycraft.perks.PetPerk;
+import com.github.imdabigboss.easycraft.perks.RavelPerk;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -79,6 +81,12 @@ public class EasyCraft extends JavaPlugin {
 	@Override
 	public void onDisable() {
 		this.getServer().getScheduler().cancelTasks(this);
+
+		RavelPerk perk = perksManager.getPerk(PetPerk.NAME);
+		if (perk != null) {
+			PetPerk petPerk = (PetPerk) perk;
+			petPerk.removeAllPets();
+		}
 
 		pluginMessageManager.unregister();
 	}

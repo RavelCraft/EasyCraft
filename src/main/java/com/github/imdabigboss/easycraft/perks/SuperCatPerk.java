@@ -11,7 +11,7 @@ public class SuperCatPerk extends RavelPerk {
     private final EasyCraft plugin = EasyCraft.getInstance();
 
     public SuperCatPerk() {
-        super(NAME, 3, false);
+        super(NAME, 2, false);
     }
 
     @Override

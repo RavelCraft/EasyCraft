@@ -11,7 +11,7 @@ public class SuperDogPerk extends RavelPerk {
     private final EasyCraft plugin = EasyCraft.getInstance();
 
     public SuperDogPerk() {
-        super(NAME, 3, false);
+        super(NAME, 2, false);
     }
 
     @Override
