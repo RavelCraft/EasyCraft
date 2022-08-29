@@ -5,7 +5,6 @@ import com.github.imdabigboss.easycraft.perks.pet.FollowPlayerGoal;
 import net.kyori.adventure.text.Component;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
