@@ -29,6 +29,7 @@ public class PerksManager {
 		this.registerPerk(new PetPerk());
 		this.registerPerk(new ArrowTrailPerk());
 		this.registerPerk(new HatPerk());
+		this.registerPerk(new SpeedBoostPerk());
 	}
 
 	private void registerPerk(RavelPerk perk) {
@@ -112,6 +113,8 @@ public class PerksManager {
 			} else {
 				player.sendMessage(ChatColor.RED + "Perk purchase failed.");
 			}
+		} else {
+			player.sendMessage(ChatColor.RED + "Perk " + args[0] + " does not exist!");
 		}
 
 		return true;

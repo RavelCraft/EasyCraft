@@ -10,43 +10,28 @@ import org.bukkit.inventory.ItemStack;
 import java.util.HashMap;
 import java.util.Map;
 
-public class HatPerk extends RavelPerk {
-    public static final String NAME = "hat";
+public class SpeedBoostPerk extends RavelPerk {
+    public static final String NAME = "speed_boost";
 
-    public Map<String, ItemStack> hats = new HashMap<>();
+    public ItemStack item = null;
 
-    public HatPerk() {
+    public SpeedBoostPerk() {
         super(NAME, 2, false);
 
         if (EasyCraft.isRavelDatapackInstalled()) {
-            for (CustomItem item : RavelDatapack.getHatManager().getItems().values()) {
-                this.hats.put(item.getNamespaceKey(), item.getItemStack());
-            }
+            this.item = RavelDatapack.getItemManager().getItem("speed_boost");
         }
     }
 
     @Override
     public boolean getPerk(Player player, String[] args) {
-        if (!EasyCraft.isRavelDatapackInstalled()) {
+        if (this.item == null) {
             player.sendMessage(ChatColor.RED + "Something is strange, please contact a member of staff.");
             return false;
         }
 
-        if (args.length == 0) {
-            StringBuilder sb = new StringBuilder("Please specify a hat from the list below:");
-            for (String hat : this.hats.keySet()) {
-                sb.append("\n - ").append(hat);
-            }
-
-            player.sendMessage(ChatColor.RED + sb.toString());
-            return false;
-        } else if (args.length > 1) {
+        if (args.length != 0) {
             player.sendMessage(ChatColor.RED + "Too many arguments!");
-            return false;
-        }
-
-        if (!this.hats.containsKey(args[0])) {
-            player.sendMessage(ChatColor.RED + "That hat does not exist!");
             return false;
         }
 
@@ -54,7 +39,7 @@ public class HatPerk extends RavelPerk {
             player.sendMessage(ChatColor.RED + "You have no space in your inventory!");
             return false;
         } else {
-            player.getInventory().addItem(this.hats.get(args[0]).clone());
+            player.getInventory().addItem(this.item.clone());
         }
 
         return true;
