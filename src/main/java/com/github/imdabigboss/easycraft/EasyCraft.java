@@ -1,5 +1,6 @@
 package com.github.imdabigboss.easycraft;
 
+import com.connexal.raveldatapack.RavelDatapack;
 import com.github.imdabigboss.easycraft.events.DeathMessages;
 import com.github.imdabigboss.easycraft.events.EventListener;
 import com.github.imdabigboss.easycraft.events.LobbyEvents;
@@ -24,12 +25,17 @@ public class EasyCraft extends JavaPlugin {
 	private static ConfigManager configManager = null;
 	private static Ravel1984Manager ravel1984Manager = null;
 
+	private static boolean ravelDatapackInstalled = false;
 	private static String serverName = ChatColor.RED + "ERROR";
 
 	@Override
 	public void onEnable() {
 		instance = this;
 		logger = getLogger();
+
+		if (this.getServer().getPluginManager().getPlugin("RavelDatapack") != null) {
+			ravelDatapackInstalled = true;
+		}
 
 		this.saveDefaultConfig();
 
@@ -125,5 +131,9 @@ public class EasyCraft extends JavaPlugin {
 
 	public static CommandManager getCommandManager() {
 		return commandManager;
+	}
+
+	public static boolean isRavelDatapackInstalled() {
+		return ravelDatapackInstalled;
 	}
 }

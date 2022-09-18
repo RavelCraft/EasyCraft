@@ -3,6 +3,7 @@ package com.github.imdabigboss.easycraft.perks;
 import com.github.imdabigboss.easycraft.EasyCraft;
 import org.bukkit.*;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
@@ -42,6 +43,10 @@ public class ArrowTrailPerk extends RavelPerk implements Listener {
 
     @EventHandler
     public void onProjectileLaunch(ProjectileLaunchEvent event) {
+        if (!event.getEntityType().equals(EntityType.ARROW)) {
+            return;
+        }
+
         Projectile entity = event.getEntity();
 
         if (entity.getShooter() instanceof Player) {

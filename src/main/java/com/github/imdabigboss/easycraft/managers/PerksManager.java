@@ -28,6 +28,7 @@ public class PerksManager {
 		this.registerPerk(new EntityInabukketPerk());
 		this.registerPerk(new PetPerk());
 		this.registerPerk(new ArrowTrailPerk());
+		this.registerPerk(new HatPerk());
 	}
 
 	private void registerPerk(RavelPerk perk) {
