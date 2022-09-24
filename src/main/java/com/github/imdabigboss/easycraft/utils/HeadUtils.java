@@ -27,17 +27,16 @@ public class HeadUtils {
         return skull;
     }
 
-    public static ItemStack getHead(String url) {
+    public static ItemStack getHeadFromBase64(String base64) {
         ItemStack head = new ItemStack(Material.PLAYER_HEAD);
-        if (url.isEmpty()) {
+        if (base64.isEmpty()) {
             return head;
         }
 
         SkullMeta skullMeta = (SkullMeta) head.getItemMeta();
         GameProfile profile = new GameProfile(UUID.randomUUID(), null);
 
-        byte[] encodedData = Base64.getEncoder().encode(String.format("{textures:{SKIN:{url:\"%s\"}}}", url).getBytes());
-        profile.getProperties().put("textures", new Property("textures", new String(encodedData)));
+        profile.getProperties().put("textures", new Property("textures", base64));
 
         try {
             Field profileField = skullMeta.getClass().getDeclaredField("profile");
@@ -48,5 +47,14 @@ public class HeadUtils {
         }
         head.setItemMeta(skullMeta);
         return head;
+    }
+
+    public static ItemStack getHead(String url) {
+        if (url.isEmpty()) {
+            return new ItemStack(Material.PLAYER_HEAD);
+        }
+
+        byte[] encodedData = Base64.getEncoder().encode(String.format("{textures:{SKIN:{url:\"%s\"}}}", url).getBytes());
+        return getHeadFromBase64(new String(encodedData));
     }
 }

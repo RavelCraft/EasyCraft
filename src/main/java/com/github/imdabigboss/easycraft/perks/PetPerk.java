@@ -4,6 +4,13 @@ import com.destroystokyo.paper.entity.ai.Goal;
 import com.destroystokyo.paper.entity.ai.GoalKey;
 import com.destroystokyo.paper.entity.ai.GoalType;
 import com.github.imdabigboss.easycraft.EasyCraft;
+import com.github.imdabigboss.easycraft.managers.ConfigManager;
+import com.github.imdabigboss.easycraft.managers.MiniBlockManager;
+import com.github.imdabigboss.easycraft.utils.HeadUtils;
+import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.properties.Property;
+import de.themoep.inventorygui.GuiElement;
+import de.themoep.inventorygui.InventoryGui;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -16,20 +23,20 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.util.EulerAngle;
-import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.UUID;
+import java.lang.reflect.Field;
+import java.util.*;
 
-public class PetPerk extends RavelPerk implements Listener {
+public class PetPerk extends RavelPerk implements Listener, MiniBlockManager.OnPlayerChooseMiniBlock {
     public static final String NAME = "pet";
 
     private final EasyCraft plugin = EasyCraft.getInstance();
+    private final ConfigManager.YmlConfig config = EasyCraft.getConfig("perks");
+    private final MiniBlockManager miniBlockManager = EasyCraft.getMiniBlockManager();
 
     private final List<PetData> pets = new ArrayList<>();
 
@@ -46,7 +53,7 @@ public class PetPerk extends RavelPerk implements Listener {
             return false;
         }
 
-        this.summonPet(player);
+        miniBlockManager.playerChoseMiniBlcok(player, this);
         return true;
     }
 
@@ -78,6 +85,7 @@ public class PetPerk extends RavelPerk implements Listener {
         if (!EasyCraft.getPerksManager().playerHasPerk(player.getUniqueId(), NAME)) {
             return;
         }
+        ItemStack headItem = this.getHeadItem(player);
 
         Location location = player.getLocation();
         if (location.getY() <= location.getWorld().getMinHeight() + 1) {
@@ -103,7 +111,7 @@ public class PetPerk extends RavelPerk implements Listener {
         pet.setRemoveWhenFarAway(false);
 
         ArmorStand head = (ArmorStand) player.getWorld().spawnEntity(location, EntityType.ARMOR_STAND);
-        head.setItem(EquipmentSlot.HEAD, new ItemStack(Material.PLAYER_HEAD));
+        head.setItem(EquipmentSlot.HEAD, headItem);
         for (EquipmentSlot slot : EquipmentSlot.values()) {
             head.addEquipmentLock(slot, ArmorStand.LockType.REMOVING_OR_CHANGING);
             head.addEquipmentLock(slot, ArmorStand.LockType.ADDING_OR_CHANGING);
@@ -159,6 +167,39 @@ public class PetPerk extends RavelPerk implements Listener {
     public boolean isUndroppable(ItemStack item) {
         return false;
     }
+
+    @Override
+    public void onPlayerChooseMiniBlock(Player player, InventoryGui gui, GuiElement.Click click) {
+        ItemStack currentItem = click.getEvent().getCurrentItem();
+        if (currentItem == null || !currentItem.hasItemMeta()) {
+            player.sendMessage(ChatColor.RED + "Something went wrong. Please contact an administrator.");
+        }
+
+        SkullMeta skullMeta = (SkullMeta) currentItem.getItemMeta();
+        try {
+            Field profileField = skullMeta.getClass().getDeclaredField("profile");
+            profileField.setAccessible(true);
+
+            GameProfile gameProfile = (GameProfile) profileField.get(skullMeta);
+            Property property = gameProfile.getProperties().get("textures").stream().toList().get(0);
+
+            this.config.getConfig().set("pets." + player.getUniqueId(), property.getValue());
+            this.config.saveConfig();
+        } catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException e) {
+            EasyCraft.getLog().severe("Failed to set profile for head item: " + e.getMessage());
+        }
+
+        this.summonPet(player);
+    }
+
+    private ItemStack getHeadItem(Player player) {
+        if (!this.config.getConfig().contains("pets." + player.getUniqueId())) {
+            return new ItemStack(Material.PLAYER_HEAD);
+        }
+
+        return HeadUtils.getHeadFromBase64(this.config.getConfig().get("pets." + player.getUniqueId()).toString());
+    }
+
     private static class FollowPlayerGoal implements Goal<Rabbit> {
         private final GoalKey<Rabbit> key;
         private final PetPerk perk;

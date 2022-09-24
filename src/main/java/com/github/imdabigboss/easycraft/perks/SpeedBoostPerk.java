@@ -1,14 +1,10 @@
 package com.github.imdabigboss.easycraft.perks;
 
 import com.connexal.raveldatapack.RavelDatapack;
-import com.connexal.raveldatapack.items.CustomItem;
 import com.github.imdabigboss.easycraft.EasyCraft;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class SpeedBoostPerk extends RavelPerk {
     public static final String NAME = "speed_boost";

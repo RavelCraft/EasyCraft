@@ -1,6 +1,5 @@
 package com.github.imdabigboss.easycraft;
 
-import com.connexal.raveldatapack.RavelDatapack;
 import com.github.imdabigboss.easycraft.events.DeathMessages;
 import com.github.imdabigboss.easycraft.events.EventListener;
 import com.github.imdabigboss.easycraft.events.LobbyEvents;
@@ -24,6 +23,7 @@ public class EasyCraft extends JavaPlugin {
 	private static CommandManager commandManager = null;
 	private static ConfigManager configManager = null;
 	private static Ravel1984Manager ravel1984Manager = null;
+	private static MiniBlockManager miniBlockManager = null;
 
 	private static boolean ravelDatapackInstalled = false;
 	private static String serverName = ChatColor.RED + "ERROR";
@@ -49,11 +49,9 @@ public class EasyCraft extends JavaPlugin {
 		}
 
 		uuidManager = new UUIDManager();
-		perksManager = new PerksManager();
 		tpaManager = new TpaManager();
 		pluginMessageManager = new PluginMessageManager();
-		commandManager = new CommandManager();
-		commandManager.init();
+		miniBlockManager = new MiniBlockManager();
 
 		this.getServer().getPluginManager().registerEvents(new EventListener(), this);
 		this.getServer().getPluginManager().registerEvents(new DeathMessages(), this);
@@ -82,6 +80,10 @@ public class EasyCraft extends JavaPlugin {
 		if (!configManager.getConfig("homes").getConfig().contains("maxHomes")) {
 			configManager.getConfig("homes").getConfig().set("maxHomes", 2);
 		}
+
+		perksManager = new PerksManager();
+		commandManager = new CommandManager();
+		commandManager.init();
 	}
 
 	@Override
@@ -131,6 +133,14 @@ public class EasyCraft extends JavaPlugin {
 
 	public static CommandManager getCommandManager() {
 		return commandManager;
+	}
+
+	public static Ravel1984Manager getRavel1984Manager() {
+		return ravel1984Manager;
+	}
+
+	public static MiniBlockManager getMiniBlockManager() {
+		return miniBlockManager;
 	}
 
 	public static boolean isRavelDatapackInstalled() {
