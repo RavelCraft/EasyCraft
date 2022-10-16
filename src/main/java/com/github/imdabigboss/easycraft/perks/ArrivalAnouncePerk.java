@@ -34,6 +34,10 @@ public class ArrivalAnouncePerk extends RavelPerk implements Listener {
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
 
+        if (!EasyCraft.getPerksManager().playerHasPerk(player.getUniqueId(), NAME)) {
+            return;
+        }
+
         for (Player tmp : plugin.getServer().getOnlinePlayers()) {
             tmp.playSound(player.getLocation(), Sound.ENTITY_LIGHTNING_BOLT_THUNDER, 1, 1);
         }

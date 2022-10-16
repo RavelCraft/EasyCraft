@@ -8,6 +8,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.*;
@@ -93,7 +94,7 @@ public class EventListener implements Listener {
 		this.shouldHavePerkItem.remove(player.getUniqueId());
 	}
 
-	@EventHandler
+	@EventHandler(priority = EventPriority.HIGHEST)
 	public void chatFormat(AsyncPlayerChatEvent event) {
 		Player p = event.getPlayer();
 		event.getRecipients().clear(); //Don't cancel the event so that the server can log the message
@@ -101,6 +102,29 @@ public class EventListener implements Listener {
 
 		for (Player player : this.plugin.getServer().getOnlinePlayers()) {
 			player.sendMessage(ChatColor.WHITE + StringUtils.componentToString(p.displayName()) + ChatColor.WHITE + ": " + event.getMessage());
+		}
+	}
+
+	@EventHandler(priority = EventPriority.LOWEST)
+	public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
+		if (event.getMessage().toLowerCase(Locale.ROOT).startsWith("/msg")) {
+			event.setCancelled(true);
+
+			String[] args = event.getMessage().split(" ");
+			if (args.length < 3) {
+				event.getPlayer().sendMessage(ChatColor.RED + "Usage: /msg <player> <message>");
+				return;
+			}
+
+			Player recipient = plugin.getServer().getPlayer(event.getMessage().split(" ")[1]);
+			if (recipient == null) {
+				event.getPlayer().sendMessage(ChatColor.RED + "That player is not online!");
+				return;
+			}
+
+			String message = event.getMessage().substring(event.getMessage().indexOf(args[2]));
+			event.getPlayer().sendMessage(ChatColor.LIGHT_PURPLE + "To " + ChatColor.WHITE + recipient.getDisplayName() + ": " + message);
+			recipient.sendMessage(ChatColor.LIGHT_PURPLE + "From " + ChatColor.WHITE + event.getPlayer().getDisplayName() + ": " + message);
 		}
 	}
 }

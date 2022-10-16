@@ -195,7 +195,8 @@ public class EntityInabukketPerk extends RavelPerk implements Listener {
         livingEntity.setRemoveWhenFarAway(false);
         livingEntity.setSilent(true);
 
-        livingEntity.teleport(new Location(player.getWorld(), 0, player.getWorld().getMinHeight() - 2, 0));
+        Location playerLocation = player.getLocation();
+        livingEntity.teleport(new Location(playerLocation.getWorld(), playerLocation.getX(), player.getWorld().getMinHeight() - 2, playerLocation.getZ()));
 
         player.sendMessage(ChatColor.AQUA + "You put the entity inabukket!");
     }

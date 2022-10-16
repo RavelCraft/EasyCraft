@@ -47,7 +47,11 @@ public class ArrowTrailPerk extends RavelPerk implements Listener {
 
         Projectile entity = event.getEntity();
 
-        if (entity.getShooter() instanceof Player) {
+        if (entity.getShooter() instanceof Player player) {
+            if (!EasyCraft.getPerksManager().playerHasPerk(player.getUniqueId(), NAME)) {
+                return;
+            }
+
             this.arrows.put(entity, new BukkitRunnable() {
                 @Override
                 public void run() {

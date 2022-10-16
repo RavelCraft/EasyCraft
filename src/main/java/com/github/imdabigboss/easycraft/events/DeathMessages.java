@@ -21,14 +21,14 @@ public class DeathMessages implements Listener {
 	private static final Random random = new Random();
 
 	private static final String[] playerMessages = new String[] {"%player% was slaughtered by %killer%", "%killer% skilfully killed %player%", "%player% died to the hand of %killer%"};
-	private static final String[] arrowMessages = new String[] {"%player% was impaled by %killer%", "%killer% shot %player% to death"};
+	private static final String[] arrowMessages = new String[] {"%player% was impaled by %killer%", "%killer% shot %player% to death", "%player% was shot by %killer%"};
 	private static final String[] creeperMessages = new String[] {"Hello mine turtle! HELLO %player%! BOOM!", "%player% got blown to pieces"};
 	private static final String[] zombieMessages = new String[] {"%player% decided to join the realm of the zombies", "%player% got eaten alive by a zombie"};
 	private static final String[] voidMessages = new String[] {"%player% wanted to know what the bottom of the world looks like", "%player% lost their balance and fell into the void"};
 	private static final String[] voidByPlayerMessages = new String[] {"%killer% ruthlessly pushed %player% into the void"};
 	private static final String[] lavaMessages = new String[] {"%player% wanted to know way lava felt like", "No, %player% lava isn't baked beans!"};
-	private static final String[] drownMessages = new String[] {"%player% ran out of breath whilst swimming"};
-	private static final String[] fallMessages = new String[] {"%player%'s body got crushed whilst falling", "%player% jumped from a little too high"};
+	private static final String[] drownMessages = new String[] {"%player% ran out of breath whilst swimming", "%player% drowned", "%player% was too slow to get out of the water"};
+	private static final String[] fallMessages = new String[] {"%player%'s body got crushed whilst falling", "%player% jumped from a little too high", "%player% is now as flat as a pancake because they fell too far"};
 	private static final String[] fireMessages = new String[] {"%player% was burned alive", "%player% burned to death", "%player% was torched and sadly died", "%player% got roasted to death"};
 	private static final String[] poisonMessages = new String[] {"%player% was sadly poisoned", "Some evil person decided to poison %player% :'("};
 	private static final String[] starvationMessages = new String[] {"%player% was too poor to buy food and died", "%player% starved to death", "%player% didn't eat enough"};
@@ -146,6 +146,7 @@ public class DeathMessages implements Listener {
 
 		return Component.text(message);
 	}
+
 	private static Component replaceVars(String message, Component player) {
 		if (message.contains("%player%")) {
 			message = message.replace("%player%", StringUtils.componentToString(player));
