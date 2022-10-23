@@ -2,20 +2,14 @@ package com.github.imdabigboss.easycraft.commands;
 
 import com.github.imdabigboss.easycraft.EasyCraft;
 import com.github.imdabigboss.easycraft.managers.MiniBlockManager;
-import com.github.imdabigboss.easycraft.utils.HeadUtils;
-import de.themoep.inventorygui.*;
-import net.kyori.adventure.text.Component;
+import de.themoep.inventorygui.GuiElement;
+import de.themoep.inventorygui.InventoryGui;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class CommandMiniBlock implements CommandExecutor, MiniBlockManager.OnPlayerChooseMiniBlock {
 	@Override

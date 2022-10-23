@@ -29,7 +29,10 @@ import org.bukkit.util.EulerAngle;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Field;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.List;
+import java.util.UUID;
 
 public class PetPerk extends RavelPerk implements Listener, MiniBlockManager.OnPlayerChooseMiniBlock {
     public static final String NAME = "pet";

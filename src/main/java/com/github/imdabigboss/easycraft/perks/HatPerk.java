@@ -1,7 +1,8 @@
 package com.github.imdabigboss.easycraft.perks;
 
-import com.connexal.raveldatapack.RavelDatapack;
-import com.connexal.raveldatapack.items.CustomItem;
+import com.connexal.raveldatapack.api.RavelDatapackAPI;
+import com.connexal.raveldatapack.api.items.CustomHatItem;
+import com.connexal.raveldatapack.api.items.CustomItem;
 import com.github.imdabigboss.easycraft.EasyCraft;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -19,8 +20,10 @@ public class HatPerk extends RavelPerk {
         super(NAME, 2, false);
 
         if (EasyCraft.isRavelDatapackInstalled()) {
-            for (CustomItem item : RavelDatapack.getHatManager().getItems().values()) {
-                this.hats.put(item.getNamespaceKey(), item.getItemStack());
+            for (CustomItem item : RavelDatapackAPI.getItemManager().getItems().values()) {
+                if (item instanceof CustomHatItem) {
+                    this.hats.put(item.getNamespaceKey(), item.getItemStack());
+                }
             }
         }
     }

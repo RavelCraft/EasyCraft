@@ -23,6 +23,8 @@ public class LobbyEvents implements Listener {
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
 
+        player.setGameMode(GameMode.SURVIVAL);
+
         Location spawnPoint;
         if (plugin.getConfig().contains("spawnLoc")) {
             spawnPoint = plugin.getConfig().getLocation("spawnLoc");

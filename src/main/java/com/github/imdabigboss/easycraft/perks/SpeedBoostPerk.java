@@ -1,6 +1,6 @@
 package com.github.imdabigboss.easycraft.perks;
 
-import com.connexal.raveldatapack.RavelDatapack;
+import com.connexal.raveldatapack.api.RavelDatapackAPI;
 import com.github.imdabigboss.easycraft.EasyCraft;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -15,7 +15,7 @@ public class SpeedBoostPerk extends RavelPerk {
         super(NAME, 2, false);
 
         if (EasyCraft.isRavelDatapackInstalled()) {
-            this.item = RavelDatapack.getItemManager().getItem("speed_boost");
+            this.item = RavelDatapackAPI.getItemManager().getItem("speed_boost");
         }
     }
 
