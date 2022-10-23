@@ -96,6 +96,8 @@ public class EasyCraft extends JavaPlugin {
 			petPerk.removeAllPets();
 		}
 
+		ravel1984Manager.flushCache();
+
 		pluginMessageManager.unregister();
 	}
 

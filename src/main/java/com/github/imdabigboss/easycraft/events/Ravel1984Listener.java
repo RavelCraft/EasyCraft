@@ -26,28 +26,16 @@ public class Ravel1984Listener implements Listener {
 
     @EventHandler
     public void playerJoined(PlayerJoinEvent event) {
-        if (event.getPlayer().isOp()) {
-            return;
-        }
-
         manager.logData("connections", "Joined the server", event.getPlayer().getUniqueId());
     }
 
     @EventHandler
     public void playerLeft(PlayerQuitEvent event) {
-        if (event.getPlayer().isOp()) {
-            return;
-        }
-
         manager.logData("connections", "Left the server: " + event.getReason().name(), event.getPlayer().getUniqueId());
     }
 
     @EventHandler
     public void playerKicked(PlayerKickEvent event) {
-        if (event.getPlayer().isOp()) {
-            return;
-        }
-
         manager.logData("connections", "Kicked from the server: " + event.getCause().name(), event.getPlayer().getUniqueId());
     }
 
@@ -55,10 +43,6 @@ public class Ravel1984Listener implements Listener {
 
     @EventHandler
     public void playerChat(AsyncPlayerChatEvent event) {
-        if (event.getPlayer().isOp()) {
-            return;
-        }
-
         manager.logData("chat", event.getMessage(), event.getPlayer().getUniqueId());
     }
 
@@ -66,10 +50,6 @@ public class Ravel1984Listener implements Listener {
 
     @EventHandler
     public void playerCommand(PlayerCommandPreprocessEvent event) {
-        if (event.getPlayer().isOp()) {
-            return;
-        }
-
         manager.logData("command", event.getMessage(), event.getPlayer().getUniqueId());
     }
 
@@ -77,10 +57,6 @@ public class Ravel1984Listener implements Listener {
 
     @EventHandler
     public void playerTeleport(PlayerTeleportEvent event) {
-        if (event.getPlayer().isOp()) {
-            return;
-        }
-
         manager.logData("teleport", "From: " + StringUtils.locationToString(event.getFrom()) + "; To: " + StringUtils.locationToString(event.getTo()), event.getPlayer().getUniqueId());
     }
 
@@ -88,10 +64,6 @@ public class Ravel1984Listener implements Listener {
 
     @EventHandler
     public void playerDeath(PlayerDeathEvent event) {
-        if (event.getEntity().isOp()) {
-            return;
-        }
-
         manager.logData("death", "Cause: " + StringUtils.componentToString(event.deathMessage()) + "; At " + StringUtils.locationToString(event.getPlayer().getLocation()), event.getEntity().getUniqueId());
     }
 
@@ -99,19 +71,11 @@ public class Ravel1984Listener implements Listener {
 
     @EventHandler
     public void playerBreakBlock(BlockBreakEvent event) {
-        if (event.getPlayer().isOp()) {
-            return;
-        }
-
         manager.logData("block", "Break: " + event.getBlock().getType().name() + " at " + StringUtils.locationToString(event.getBlock().getLocation()), event.getPlayer().getUniqueId());
     }
 
     @EventHandler
     public void playerPlaceBlock(BlockPlaceEvent event) {
-        if (event.getPlayer().isOp()) {
-            return;
-        }
-
         manager.logData("block", "Place: " + event.getBlock().getType().name() + " at " + StringUtils.locationToString(event.getBlock().getLocation()), event.getPlayer().getUniqueId());
     }
 
@@ -119,9 +83,6 @@ public class Ravel1984Listener implements Listener {
 
     @EventHandler
     public void inventoryMoveItem(InventoryClickEvent event) {
-        if (event.getWhoClicked().isOp()) {
-            return;
-        }
         if (event.getClickedInventory() == null) {
             return;
         }
@@ -146,38 +107,22 @@ public class Ravel1984Listener implements Listener {
 
     @EventHandler
     public void playerBucketFill(PlayerBucketFillEvent event) {
-        if (event.getPlayer().isOp()) {
-            return;
-        }
-
         manager.logData("bucket", "Filled at " + StringUtils.locationToString(event.getBlockClicked().getLocation()) + " with " + event.getItemStack().getType().name(), event.getPlayer().getUniqueId());
     }
 
     @EventHandler
     public void playerBucketEmpty(PlayerBucketEmptyEvent event) {
-        if (event.getPlayer().isOp()) {
-            return;
-        }
-
         manager.logData("bucket", "Emptied at " + StringUtils.locationToString(event.getBlockClicked().getLocation()) + " with " + event.getBucket().name(), event.getPlayer().getUniqueId());
     }
 
     //Items
     @EventHandler
     public void playerPickupItem(PlayerAttemptPickupItemEvent event) {
-        if (event.getPlayer().isOp()) {
-            return;
-        }
-
         manager.logData("item", "Picked up " + event.getItem().getItemStack().getType().name() + " x" + event.getItem().getItemStack().getAmount() + " at " + StringUtils.locationToString(event.getItem().getLocation()), event.getPlayer().getUniqueId());
     }
 
     @EventHandler
     public void playerThrowItem(PlayerDropItemEvent event) {
-        if (event.getPlayer().isOp()) {
-            return;
-        }
-
         manager.logData("item", "Dropped " + event.getItemDrop().getItemStack().getType().name() + " x" + event.getItemDrop().getItemStack().getAmount() + " at " + StringUtils.locationToString(event.getItemDrop().getLocation()), event.getPlayer().getUniqueId());
     }
 }
