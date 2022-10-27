@@ -48,8 +48,8 @@
       <scope>compile</scope>
     </dependency>
     <dependency>
-      <groupId>com.connexal</groupId>
-      <artifactId>raveldatapack</artifactId>
+      <groupId>com.github.imdabigboss.easydatapack</groupId>
+      <artifactId>api</artifactId>
       <version>1.0</version>
       <scope>provided</scope>
     </dependency>

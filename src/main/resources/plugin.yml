@@ -2,7 +2,7 @@ name: EasyCraft
 main: com.github.imdabigboss.easycraft.EasyCraft
 version: 2.0
 api-version: 1.18
-softdepend: [RavelDatapack]
+softdepend: [EasyDatapack, RavelDatapack]
 
 commands:
   maintenance:

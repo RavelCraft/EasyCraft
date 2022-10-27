@@ -25,7 +25,7 @@ public class EasyCraft extends JavaPlugin {
 	private static Ravel1984Manager ravel1984Manager = null;
 	private static MiniBlockManager miniBlockManager = null;
 
-	private static boolean ravelDatapackInstalled = false;
+	private static boolean easyDatapackInstalled = false;
 	private static String serverName = ChatColor.RED + "ERROR";
 
 	@Override
@@ -33,8 +33,8 @@ public class EasyCraft extends JavaPlugin {
 		instance = this;
 		logger = getLogger();
 
-		if (this.getServer().getPluginManager().getPlugin("RavelDatapack") != null) {
-			ravelDatapackInstalled = true;
+		if (this.getServer().getPluginManager().getPlugin("EasyDatapack") != null) {
+			easyDatapackInstalled = true;
 		}
 
 		this.saveDefaultConfig();
@@ -147,7 +147,7 @@ public class EasyCraft extends JavaPlugin {
 		return miniBlockManager;
 	}
 
-	public static boolean isRavelDatapackInstalled() {
-		return ravelDatapackInstalled;
+	public static boolean isEasyDatapackInstalled() {
+		return easyDatapackInstalled;
 	}
 }

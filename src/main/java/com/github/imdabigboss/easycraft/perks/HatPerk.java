@@ -1,9 +1,9 @@
 package com.github.imdabigboss.easycraft.perks;
 
-import com.connexal.raveldatapack.api.RavelDatapackAPI;
-import com.connexal.raveldatapack.api.items.CustomHatItem;
-import com.connexal.raveldatapack.api.items.CustomItem;
 import com.github.imdabigboss.easycraft.EasyCraft;
+import com.github.imdabigboss.easydatapack.api.EasyDatapackAPI;
+import com.github.imdabigboss.easydatapack.api.items.CustomHatItem;
+import com.github.imdabigboss.easydatapack.api.items.CustomItem;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -19,8 +19,8 @@ public class HatPerk extends RavelPerk {
     public HatPerk() {
         super(NAME, 2, false);
 
-        if (EasyCraft.isRavelDatapackInstalled()) {
-            for (CustomItem item : RavelDatapackAPI.getItemManager().getItems().values()) {
+        if (EasyCraft.isEasyDatapackInstalled()) {
+            for (CustomItem item : EasyDatapackAPI.getItemManager().getCustomItems()) {
                 if (item instanceof CustomHatItem) {
                     this.hats.put(item.getNamespaceKey(), item.getItemStack());
                 }
@@ -30,7 +30,7 @@ public class HatPerk extends RavelPerk {
 
     @Override
     public boolean getPerk(Player player, String[] args) {
-        if (!EasyCraft.isRavelDatapackInstalled()) {
+        if (!EasyCraft.isEasyDatapackInstalled()) {
             player.sendMessage(ChatColor.RED + "Something is strange, please contact a member of staff.");
             return false;
         }
