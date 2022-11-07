@@ -84,6 +84,8 @@ public class EasyCraft extends JavaPlugin {
 		perksManager = new PerksManager();
 		commandManager = new CommandManager();
 		commandManager.init();
+
+
 	}
 
 	@Override

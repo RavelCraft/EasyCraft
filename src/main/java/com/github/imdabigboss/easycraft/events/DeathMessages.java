@@ -17,7 +17,7 @@ import java.util.Map;
 import java.util.Random;
 
 public class DeathMessages implements Listener {
-	private Map<String, Entity> lastDamager = new HashMap<>();
+	private final Map<String, Entity> lastDamager = new HashMap<>();
 	private static final Random random = new Random();
 
 	private static final String[] playerMessages = new String[] {"%player% was slaughtered by %killer%", "%killer% skilfully killed %player%", "%player% died to the hand of %killer%"};

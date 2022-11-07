@@ -16,6 +16,7 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
+import java.util.logging.Logger;
 
 public class EventListener implements Listener {
 	private final EasyCraft plugin = EasyCraft.getInstance();
@@ -94,15 +95,16 @@ public class EventListener implements Listener {
 		this.shouldHavePerkItem.remove(player.getUniqueId());
 	}
 
-	@EventHandler(priority = EventPriority.HIGHEST)
-	public void chatFormat(AsyncPlayerChatEvent event) {
-		Player p = event.getPlayer();
-		event.getRecipients().clear(); //Don't cancel the event so that the server can log the message
-		event.setFormat(p.getName() + ": " + event.getMessage());
+	@EventHandler(priority = EventPriority.LOWEST)
+	public void onPlayerChatEvent(AsyncPlayerChatEvent event) {
+		event.setCancelled(true);
 
+		String message = ChatColor.WHITE + StringUtils.componentToString(event.getPlayer().displayName()) + ChatColor.WHITE + ": " + event.getMessage();
 		for (Player player : this.plugin.getServer().getOnlinePlayers()) {
-			player.sendMessage(ChatColor.WHITE + StringUtils.componentToString(p.displayName()) + ChatColor.WHITE + ": " + event.getMessage());
+			player.sendMessage(message);
 		}
+
+		Logger.getLogger("Minecraft").info("[CHAT]: " + ChatColor.stripColor(message));
 	}
 
 	@EventHandler(priority = EventPriority.LOWEST)

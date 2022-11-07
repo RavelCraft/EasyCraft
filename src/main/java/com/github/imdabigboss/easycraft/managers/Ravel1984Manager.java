@@ -28,7 +28,7 @@ public class Ravel1984Manager {
     public void logData(String dataType, String data, UUID uuid) {
         new Thread(() -> {
             DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
-            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
             File logFile = new File(logPath + "/" + dateFormatter.format(ZonedDateTime.now()) + "/" + uuid.toString() + "/" + dataType + ".txt");
             String logData = "[" + timeFormatter.format(ZonedDateTime.now()) + "] " + data + "\n";
