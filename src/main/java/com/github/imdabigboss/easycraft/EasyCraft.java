@@ -85,7 +85,7 @@ public class EasyCraft extends JavaPlugin {
 		commandManager = new CommandManager();
 		commandManager.init();
 
-
+		pluginMessageManager.initConnection();
 	}
 
 	@Override
@@ -102,7 +102,7 @@ public class EasyCraft extends JavaPlugin {
 			ravel1984Manager.flushCache();
 		}
 
-		pluginMessageManager.unregister();
+		pluginMessageManager.close();
 	}
 
 	public static EasyCraft getInstance() {

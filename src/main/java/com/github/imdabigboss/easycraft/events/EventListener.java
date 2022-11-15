@@ -5,11 +5,16 @@ import com.github.imdabigboss.easycraft.utils.StringUtils;
 import net.kyori.adventure.text.Component;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.EntityInteractEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.EquipmentSlot;
@@ -21,9 +26,12 @@ import java.util.logging.Logger;
 public class EventListener implements Listener {
 	private final EasyCraft plugin = EasyCraft.getInstance();
 	private final Map<UUID, ItemStack[]> shouldHavePerkItem = new HashMap<>();
+	private final List<Material> farmlandBlocks = List.of(Material.FARMLAND);
 
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent event) {
+		EasyCraft.getPluginMessageManager().initConnection();
+
 		Player player = event.getPlayer();
 		if (this.plugin.getConfig().get("maintenance").equals("on") && !player.hasPermission("easycraft.maintenance.bypass")) {
 			player.kick(Component.text("We very sorry " + ChatColor.YELLOW + player.getName() + ChatColor.RESET + " but the server has been put under " + ChatColor.RED + "maintenance mode"));
@@ -36,8 +44,6 @@ public class EventListener implements Listener {
 		}
 
 		event.joinMessage(Component.text(ChatColor.YELLOW + player.getName() + " joined the server"));
-
-		EasyCraft.getPluginMessageManager().readQueuedPluginMessages();
 	}
 
 	@EventHandler
@@ -49,15 +55,40 @@ public class EventListener implements Listener {
 
 	@EventHandler
 	public void onClick(PlayerInteractEntityEvent event) {
-		if (event.getHand() != EquipmentSlot.HAND) {
-			return;
-		}
-
-		if (event.getRightClicked() instanceof ItemFrame entity) {
+		if (event.getHand() == EquipmentSlot.HAND && event.getRightClicked() instanceof ItemFrame entity) {
 			if (event.getPlayer().isSneaking() && entity.getItem().getType() == Material.AIR) {
 				entity.setVisible(!entity.isVisible());
 			}
 		}
+	}
+
+	@EventHandler
+	public void onMobTrample(EntityInteractEvent event) {
+		if (event.getEntity() instanceof Player) {
+			return;
+		}
+
+		if (this.farmlandBlocks.contains(event.getBlock().getType())) {
+			event.setCancelled(true);
+		}
+	}
+
+	@EventHandler
+	public void onPlayerTrample(PlayerInteractEvent event) {
+		if (event.getAction() == Action.PHYSICAL && this.farmlandBlocks.contains(event.getClickedBlock().getType())) {
+			event.setCancelled(true);
+		}
+	}
+
+	@EventHandler
+	public void onEntityDeath(EntityDeathEvent event) {
+		Entity entity = event.getEntity();
+		if (entity.getType() == EntityType.SHULKER) {
+			event.getDrops().clear();
+			ItemStack shulkerStack = new ItemStack(Material.SHULKER_SHELL, 2);
+			event.getEntity().getWorld().dropItemNaturally(entity.getLocation(), shulkerStack);
+		}
+
 	}
 
 	@EventHandler
