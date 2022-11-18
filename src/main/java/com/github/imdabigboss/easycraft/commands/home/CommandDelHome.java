@@ -2,7 +2,7 @@ package com.github.imdabigboss.easycraft.commands.home;
 
 import com.github.imdabigboss.easycraft.EasyCraft;
 import com.github.imdabigboss.easycraft.managers.ConfigManager;
-import org.bukkit.ChatColor;
+import com.github.imdabigboss.easycraft.utils.PlayerMessage;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -22,18 +22,18 @@ public class CommandDelHome implements CommandExecutor, TabExecutor {
 		}
 
 		if (args.length != 1) {
-			sender.sendMessage(ChatColor.AQUA + "You must enter a home number! Your max home count is: " + maxHomes);
+			sender.sendMessage(PlayerMessage.formatMessage(PlayerMessage.COMMAND_HOME_ENTER_HOME_NUMBER, sender, maxHomes + ""));
 		} else if (sender instanceof Player player) {
 			String info = player.getUniqueId() + "." + args[0];
 			if (!homesYML.getConfig().contains(info + ".World")) {
-				sender.sendMessage("You have no home with that number!");
+				sender.sendMessage(PlayerMessage.formatMessage(PlayerMessage.COMMAND_HOME_NO_HOME_NUMBER, sender));
 			} else {
 				homesYML.getConfig().set(info, null);
 				homesYML.saveConfig();
-				sender.sendMessage(ChatColor.AQUA + "You have deleted your home!");
+				sender.sendMessage(PlayerMessage.formatMessage(PlayerMessage.COMMAND_HOME_DELETED, sender));
 			}
 		} else {
-			sender.sendMessage(ChatColor.RED + "You must be a player to run this command!");
+			sender.sendMessage(PlayerMessage.formatMessage(PlayerMessage.COMMAND_MUST_BE_PLAYER, sender));
 		}
 		return true;
 	}

@@ -2,7 +2,7 @@ package com.github.imdabigboss.easycraft.commands.home;
 
 import com.github.imdabigboss.easycraft.EasyCraft;
 import com.github.imdabigboss.easycraft.managers.ConfigManager;
-import org.bukkit.ChatColor;
+import com.github.imdabigboss.easycraft.utils.PlayerMessage;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -24,21 +24,17 @@ public class CommandSetHome implements CommandExecutor, TabExecutor {
 		}
 
 		if (args.length != 1) {
-			sender.sendMessage(ChatColor.AQUA + "You must enter a home number! Your max home count is: " + maxHomes);
+			sender.sendMessage(PlayerMessage.formatMessage(PlayerMessage.COMMAND_HOME_ENTER_HOME_NUMBER, sender, maxHomes + ""));
 			return true;
 		} else if (sender instanceof Player player) {
 			try {
-				if (Integer.parseInt(args[0]) > maxHomes) {
-					sender.sendMessage("Your max home count is " + maxHomes + "!");
-					return true;
-				}
-
-				if (Integer.parseInt(args[0]) <= 0) {
-					sender.sendMessage("You can't do that number!");
+				int homeNumber = Integer.parseInt(args[0]);
+				if (homeNumber > maxHomes || homeNumber <= 0) {
+					sender.sendMessage(PlayerMessage.formatMessage(PlayerMessage.COMMAND_HOME_TOO_LARGE, sender, maxHomes + ""));
 					return true;
 				}
 			} catch (Exception e) {
-				sender.sendMessage("That is not a number!\nYou must go: /sethome <homeNumber>");
+				sender.sendMessage(PlayerMessage.formatMessage(PlayerMessage.COMMAND_HOME_NAN, sender));
 				return true;
 			}
 
@@ -51,9 +47,9 @@ public class CommandSetHome implements CommandExecutor, TabExecutor {
 			homesYML.getConfig().set(info + ".Pitch", loc.getPitch());
 			homesYML.getConfig().set(info + ".Yaw", loc.getYaw());
 			homesYML.saveConfig();
-			player.sendMessage(ChatColor.AQUA + "You set your home here!");
+			sender.sendMessage(PlayerMessage.formatMessage(PlayerMessage.COMMAND_HOME_SET, sender));
 		} else {
-			sender.sendMessage(ChatColor.RED + "You must be a player to run this command!");
+			sender.sendMessage(PlayerMessage.formatMessage(PlayerMessage.COMMAND_MUST_BE_PLAYER, sender));
 		}
 		return true;
 	}

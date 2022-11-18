@@ -24,6 +24,7 @@ public class EasyCraft extends JavaPlugin {
 	private static ConfigManager configManager = null;
 	private static Ravel1984Manager ravel1984Manager = null;
 	private static MiniBlockManager miniBlockManager = null;
+	private static LanguageManager languageManager = null;
 
 	private static boolean easyDatapackInstalled = false;
 	private static String serverName = ChatColor.RED + "ERROR";
@@ -52,6 +53,7 @@ public class EasyCraft extends JavaPlugin {
 		tpaManager = new TpaManager();
 		pluginMessageManager = new PluginMessageManager();
 		miniBlockManager = new MiniBlockManager();
+		languageManager = new LanguageManager();
 
 		this.getServer().getPluginManager().registerEvents(new EventListener(), this);
 		this.getServer().getPluginManager().registerEvents(new DeathMessages(), this);
@@ -147,6 +149,10 @@ public class EasyCraft extends JavaPlugin {
 
 	public static MiniBlockManager getMiniBlockManager() {
 		return miniBlockManager;
+	}
+
+	public static LanguageManager getLanguageManager() {
+		return languageManager;
 	}
 
 	public static boolean isEasyDatapackInstalled() {

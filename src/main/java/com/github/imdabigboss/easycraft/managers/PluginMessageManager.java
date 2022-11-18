@@ -1,6 +1,7 @@
 package com.github.imdabigboss.easycraft.managers;
 
 import com.github.imdabigboss.easycraft.EasyCraft;
+import com.github.imdabigboss.easycraft.utils.PlayerMessage;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.ChatColor;
@@ -11,8 +12,6 @@ import org.bukkit.scoreboard.Team;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 public class PluginMessageManager {
@@ -62,18 +61,14 @@ public class PluginMessageManager {
             try {
                 while (this.listening) {
                     String command = this.inputStream.readUTF();
+                    int argumentCount = this.inputStream.readInt();
 
-                    List<String> args = new ArrayList<>();
-                    while (true) {
-                        String line = this.inputStream.readUTF();
-                        if (line.equals("\u0000")) {
-                            break;
-                        }
-
-                        args.add(line);
+                    String[] arguments = new String[argumentCount];
+                    for (int i = 0; i < argumentCount; i++) {
+                        arguments[i] = this.inputStream.readUTF();
                     }
 
-                    this.runCommand(command, args.toArray(new String[0]));
+                    this.runCommand(command, arguments);
                 }
             } catch (IOException e) {
                 EasyCraft.getLog().warning("Disconnected from plugin messaging");
@@ -107,16 +102,20 @@ public class PluginMessageManager {
     }
 
     private void runCommand(String command, String[] args) throws IOException {
-        if (command.equalsIgnoreCase("setdisplayname")) {
-            UUID uuid;
-            try {
-                uuid = UUID.fromString(args[0]);
-            } catch (IllegalArgumentException e) {
-                EasyCraft.getLog().severe("Got invalid UUID from plugin messaging in setdisplayname command");
-                return;
-            }
-            Player player = EasyCraft.getInstance().getServer().getPlayer(uuid);
+        UUID uuid;
+        try {
+            uuid = UUID.fromString(args[0]);
+        } catch (IllegalArgumentException e) {
+            EasyCraft.getLog().severe("Got invalid UUID from plugin messaging command");
+            return;
+        }
+        Player player = EasyCraft.getInstance().getServer().getPlayer(uuid);
+        if (player == null) {
+            EasyCraft.getLog().severe("Got command for player that doesn't exist");
+            return;
+        }
 
+        if (command.equalsIgnoreCase("setdisplayname")) {
             String rankName = args[1];
             String color = args[2];
 
@@ -160,6 +159,14 @@ public class PluginMessageManager {
             playerTeam.setAllowFriendlyFire(true);
             playerTeam.prefix(Component.text(prefix));
             playerTeam.addEntry(player.getName());
+        } else if (command.equalsIgnoreCase("setplayerlanguage")) {
+            PlayerMessage.MessageLanguage messageLanguage = PlayerMessage.MessageLanguage.getLanguage(args[1]);
+            if (messageLanguage == null) {
+                EasyCraft.getLog().severe("Got invalid language " + args[1] + " from plugin messaging command");
+                return;
+            }
+
+            EasyCraft.getLanguageManager().setPlayerLanguage(player, messageLanguage);
         }
     }
 }

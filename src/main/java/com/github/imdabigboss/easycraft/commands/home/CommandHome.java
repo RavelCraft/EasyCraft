@@ -2,7 +2,7 @@ package com.github.imdabigboss.easycraft.commands.home;
 
 import com.github.imdabigboss.easycraft.EasyCraft;
 import com.github.imdabigboss.easycraft.managers.ConfigManager;
-import org.bukkit.ChatColor;
+import com.github.imdabigboss.easycraft.utils.PlayerMessage;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.Command;
@@ -26,16 +26,16 @@ public class CommandHome implements CommandExecutor, TabExecutor {
 		}
 
 		if (args.length != 1) {
-			sender.sendMessage(ChatColor.AQUA + "You must enter a home number! Your max home count is: " + maxHomes);
+			sender.sendMessage(PlayerMessage.formatMessage(PlayerMessage.COMMAND_HOME_ENTER_HOME_NUMBER, sender, maxHomes + ""));
 			return true;
 		} else if (sender instanceof Player player) {
 			String info = player.getUniqueId() + "." + args[0];
 			if (!homesYML.getConfig().contains(info + ".World")) {
-				player.sendMessage("You have no home with that number!\nYou must go /sethome <homeNumber>");
+				sender.sendMessage(PlayerMessage.formatMessage(PlayerMessage.COMMAND_HOME_NO_HOME_NUMBER, sender));
 			} else {
 				World world = this.plugin.getServer().getWorld(homesYML.getConfig().getString(info + ".World"));
 				if (world == null) {
-					player.sendMessage(ChatColor.RED + "An error occurred during teleportation!");
+					sender.sendMessage(PlayerMessage.formatMessage(PlayerMessage.COMMAND_HOME_TELEPORT_ERROR, sender));
 				} else {
 					Location loc = player.getLocation();
 					loc.setWorld(world);
@@ -45,11 +45,11 @@ public class CommandHome implements CommandExecutor, TabExecutor {
 					loc.setY(homesYML.getConfig().getDouble(info + ".Y"));
 					loc.setZ(homesYML.getConfig().getDouble(info + ".Z"));
 					player.teleport(loc);
-					player.sendMessage(ChatColor.AQUA + "You have been teleported home!");
+					sender.sendMessage(PlayerMessage.formatMessage(PlayerMessage.COMMAND_HOME_TELEPORTED, sender));
 				}
 			}
 		} else {
-			sender.sendMessage(ChatColor.RED + "You must be a player to run this command!");
+			sender.sendMessage(PlayerMessage.formatMessage(PlayerMessage.COMMAND_MUST_BE_PLAYER, sender));
 		}
 
 		return true;
