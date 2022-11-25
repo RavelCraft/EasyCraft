@@ -19,3 +19,5 @@ enable1984: false
 enable1984-path: /var/www/db/ravellogs/server
 
 capes-path: /var/www/db/capes
+
+server-messaging-address: localhost

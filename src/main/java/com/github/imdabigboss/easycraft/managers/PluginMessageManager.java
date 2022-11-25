@@ -27,12 +27,18 @@ public class PluginMessageManager {
             return;
         }
 
+        String host = EasyCraft.getInstance().getConfig().getString("server-messaging-address");
+        if (host == null) {
+            EasyCraft.getLog().severe("Unable to find server-messaging-address in config.yml");
+            return;
+        }
+
         new Thread(() -> {
             try {
                 this.listening = true;
-                this.socket = new Socket("localhost", PLUGIN_MESSAGE_PORT);
+                this.socket = new Socket(host, PLUGIN_MESSAGE_PORT);
             } catch (IOException e) {
-                EasyCraft.getLog().warning("Unable to connect to plugin messaging");
+                EasyCraft.getLog().warning("Unable to connect to plugin messaging " + host + ":" + PLUGIN_MESSAGE_PORT + "! " + e.getMessage());
                 return;
             }
 
