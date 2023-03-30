@@ -40,6 +40,10 @@
       <url>https://repo.minebench.de/</url>
     </repository>
     <repository>
+      <id>ranull-repo-external</id>
+      <url>https://repo.ranull.com/maven/external/</url>
+    </repository>
+    <repository>
       <id>minecraft-repo</id>
       <url>https://libraries.minecraft.net/</url>
     </repository>
@@ -110,9 +114,15 @@
       </exclusions>
     </dependency>
     <dependency>
+      <groupId>dev.sergiferry</groupId>
+      <artifactId>playernpc</artifactId>
+      <version>2023.4</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
       <groupId>com.github.imdabigboss.easydatapack</groupId>
       <artifactId>api</artifactId>
-      <version>1.0</version>
+      <version>1.1</version>
       <scope>provided</scope>
     </dependency>
   </dependencies>

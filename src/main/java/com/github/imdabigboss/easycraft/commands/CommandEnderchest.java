@@ -2,6 +2,7 @@ package com.github.imdabigboss.easycraft.commands;
 
 import com.github.imdabigboss.easycraft.EasyCraft;
 import com.github.imdabigboss.easycraft.perks.EnderchestPerk;
+import com.github.imdabigboss.easycraft.utils.PlayerMessage;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -13,13 +14,13 @@ public class CommandEnderchest implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		if (sender instanceof Player player) {
 			if (EasyCraft.getPerksManager().playerHasPerk(player.getUniqueId(), EnderchestPerk.NAME)) {
-				player.sendMessage(ChatColor.AQUA + "Opening your enderchest");
+				sender.sendMessage(PlayerMessage.formatMessage(PlayerMessage.COMMAND_ENDERCHEST_OPEN, sender));
 				player.openInventory(player.getEnderChest());
 			} else {
-				player.sendMessage(ChatColor.RED + "You did not purchase this command!");
+				sender.sendMessage(PlayerMessage.formatMessage(PlayerMessage.COMMAND_ENDERCHEST_NO_PERK, sender));
 			}
 		} else {
-			sender.sendMessage(ChatColor.RED + "You must be a player to run this command!");
+			sender.sendMessage(PlayerMessage.formatMessage(PlayerMessage.COMMAND_MUST_BE_PLAYER, sender));
 		}
 		return true;
 	}

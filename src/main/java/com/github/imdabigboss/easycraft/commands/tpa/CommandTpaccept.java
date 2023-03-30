@@ -2,6 +2,7 @@ package com.github.imdabigboss.easycraft.commands.tpa;
 
 import com.github.imdabigboss.easycraft.EasyCraft;
 import com.github.imdabigboss.easycraft.managers.TpaManager;
+import com.github.imdabigboss.easycraft.utils.PlayerMessage;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -19,22 +20,20 @@ public class CommandTpaccept implements CommandExecutor {
 			} else {
 				int out = tpaUtils.tpaAccept(player);
 				if (out == 0) {
-					sender.sendMessage("Tpa request accepted!");
+					sender.sendMessage(PlayerMessage.formatMessage(PlayerMessage.COMMAND_TPA_REQ_ACCEPTED_SENDER, sender));
 				} else if (out == 1) {
-					sender.sendMessage(ChatColor.RED + "You do not have any pending tpa requests!");
+					sender.sendMessage(PlayerMessage.formatMessage(PlayerMessage.COMMAND_TPA_NO_REQ, sender));
 				} else if (out == 2) {
-					sender.sendMessage("That player is no longer online... sorry!");
+					sender.sendMessage(PlayerMessage.formatMessage(PlayerMessage.COMMAND_TPA_PLAYER_NO_LONGER_ONLINE, sender));
 				}
-
 			}
 		} else {
-			sender.sendMessage(ChatColor.RED + "You must be a player to run this command!");
+			sender.sendMessage(PlayerMessage.formatMessage(PlayerMessage.COMMAND_MUST_BE_PLAYER, sender));
 		}
 		return true;
 	}
 
 	public void sendHelp(CommandSender sender) {
-		sender.sendMessage("The correct usage is:");
-		sender.sendMessage("/tpaccept");
+		sender.sendMessage(PlayerMessage.formatMessage(PlayerMessage.COMMAND_TPA_ACCEPT_HELP, sender));
 	}
 }

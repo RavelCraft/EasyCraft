@@ -49,9 +49,9 @@ public class CommandManager {
 
         plugin.getCommand("maintenance").setExecutor(new CommandMaintenance());
         plugin.getCommand("setmaxplayers").setExecutor(new CommandSetMaxPlayers());
-        plugin.getCommand("confupdate").setExecutor(new CommandConfUpdate());
         plugin.getCommand("perks").setExecutor(new CommandPerks());
         plugin.getCommand("enderchest").setExecutor(new CommandEnderchest());
+        plugin.getCommand("npc").setExecutor(new CommandNPC());
 
         //Optional Commands
         CommandExecutor noCommand = new NoCommand();

@@ -2,15 +2,13 @@ name: EasyCraft
 main: com.github.imdabigboss.easycraft.EasyCraft
 version: 2.0
 api-version: 1.18
-softdepend: [EasyDatapack, RavelDatapack]
+softdepend: [EasyDatapack, RavelDatapack, PlayerNPC]
 
 commands:
   maintenance:
     permission: easycraft.maintenance
   setmaxplayers:
     permission: easycraft.setmaxplayers
-  confupdate:
-    permission: easycraft.confupdate
   perks:
     permission: easycraft.perks
   enderchest:
@@ -23,6 +21,8 @@ commands:
     permission: easycraft.suicide
   headitem:
     permission: easycraft.headitem
+  npc:
+    permission: easycraft.npc
 
   home:
     permission: easycraft.home
@@ -47,14 +47,14 @@ permissions:
     default: op
   easycraft.setmaxplayers:
     default: op
-  easycraft.confupdate:
-    default: op
   easycraft.perks:
     default: true
   easycraft.perks.admin:
     default: op
   easycraft.enderchest:
     default: true
+  easycraft.npc:
+    default: op
 
   easycraft.spawn:
     default: true

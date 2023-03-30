@@ -2,7 +2,7 @@ package com.github.imdabigboss.easycraft.commands.tpa;
 
 import com.github.imdabigboss.easycraft.EasyCraft;
 import com.github.imdabigboss.easycraft.managers.TpaManager;
-import org.bukkit.ChatColor;
+import com.github.imdabigboss.easycraft.utils.PlayerMessage;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -23,32 +23,32 @@ public class CommandTpa implements CommandExecutor, TabExecutor {
 				this.sendHelp(sender);
 				return true;
 			} else if (args[0].equals(sender.getName())) {
-				sender.sendMessage(ChatColor.RED + "You can not teleport to yourself!");
+				sender.sendMessage(PlayerMessage.formatMessage(PlayerMessage.COMMAND_TPA_TP_SELF, sender));
 				return true;
 			} else {
 				Player target;
 				try {
 					target = this.plugin.getServer().getPlayer(args[0]);
 					if (target == null || !target.isOnline()) {
-						sender.sendMessage(ChatColor.RED + args[0] + " is not online!");
+						sender.sendMessage(PlayerMessage.formatMessage(PlayerMessage.COMMAND_TPA_OFFLINE, sender, args[0]));
 						return true;
 					}
 				} catch (Exception e) {
-					sender.sendMessage(ChatColor.RED + args[0] + " is not online!");
+					sender.sendMessage(PlayerMessage.formatMessage(PlayerMessage.COMMAND_TPA_OFFLINE, sender, args[0]));
 					return true;
 				}
 
 				int out = tpaUtils.createRequest((Player) sender, target, false);
 				if (out == 0) {
-					sender.sendMessage("You sent a request to " + args[0] + " so that you can teleport to them!");
+					sender.sendMessage(PlayerMessage.formatMessage(PlayerMessage.COMMAND_TPA_REQUEST_TPA, sender, args[0]));
 				} else if (out == 1) {
-					sender.sendMessage(ChatColor.RED + "This player already has a tpa request pending... Please wait!");
+					sender.sendMessage(PlayerMessage.formatMessage(PlayerMessage.COMMAND_TPA_ALREADY_HAS_REQ, sender));
 				}
 
 				return true;
 			}
 		} else {
-			sender.sendMessage(ChatColor.RED + "You must be a player to run this command!");
+			sender.sendMessage(PlayerMessage.formatMessage(PlayerMessage.COMMAND_MUST_BE_PLAYER, sender));
 			return true;
 		}
 	}
@@ -65,7 +65,6 @@ public class CommandTpa implements CommandExecutor, TabExecutor {
 	}
 
 	public void sendHelp(CommandSender sender) {
-		sender.sendMessage("The correct usage is:");
-		sender.sendMessage("/tpa <player>");
+		sender.sendMessage(PlayerMessage.formatMessage(PlayerMessage.COMMAND_TPA_TPA_HELP, sender));
 	}
 }

@@ -2,6 +2,7 @@ package com.github.imdabigboss.easycraft.commands;
 
 import com.github.imdabigboss.easycraft.EasyCraft;
 import com.github.imdabigboss.easycraft.managers.MiniBlockManager;
+import com.github.imdabigboss.easycraft.utils.PlayerMessage;
 import de.themoep.inventorygui.GuiElement;
 import de.themoep.inventorygui.InventoryGui;
 import org.bukkit.ChatColor;
@@ -17,7 +18,7 @@ public class CommandMiniBlock implements CommandExecutor, MiniBlockManager.OnPla
 		if (sender instanceof Player player) {
 			EasyCraft.getMiniBlockManager().playerChoseMiniBlcok(player, this);
 		} else {
-			sender.sendMessage(ChatColor.RED + "You must be a player to use this command!");
+			sender.sendMessage(PlayerMessage.formatMessage(PlayerMessage.COMMAND_MUST_BE_PLAYER, sender));
 		}
 		return true;
 	}
@@ -28,9 +29,9 @@ public class CommandMiniBlock implements CommandExecutor, MiniBlockManager.OnPla
 		if (currentItem != null) {
 			player.getInventory().addItem(click.getEvent().getCurrentItem());
 			player.updateInventory();
-			player.sendMessage(ChatColor.AQUA + "You have been given the mini block.");
+			player.sendMessage(PlayerMessage.formatMessage(PlayerMessage.COMMAND_MINIBLOCK_GIVEN, player));
 		} else {
-			player.sendMessage(ChatColor.RED + "Something went wrong.");
+			player.sendMessage(PlayerMessage.formatMessage(PlayerMessage.COMMAND_MINIBLOCK_ERROR, player));
 		}
 	}
 }

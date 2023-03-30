@@ -18,6 +18,13 @@ public class CommandHome implements CommandExecutor, TabExecutor {
 	private final EasyCraft plugin = EasyCraft.getInstance();
 	private final ConfigManager.YmlConfig homesYML = EasyCraft.getConfig("homes");
 
+	public CommandHome() {
+		if (!homesYML.getConfig().contains("maxHomes")) {
+			homesYML.getConfig().set("maxHomes", 2);
+			homesYML.saveConfig();
+		}
+	}
+
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		int maxHomes = 0;

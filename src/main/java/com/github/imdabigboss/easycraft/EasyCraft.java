@@ -3,7 +3,6 @@ package com.github.imdabigboss.easycraft;
 import com.github.imdabigboss.easycraft.events.DeathMessages;
 import com.github.imdabigboss.easycraft.events.EventListener;
 import com.github.imdabigboss.easycraft.events.LobbyEvents;
-import com.github.imdabigboss.easycraft.events.Ravel1984Listener;
 import com.github.imdabigboss.easycraft.managers.*;
 import com.github.imdabigboss.easycraft.perks.PetPerk;
 import com.github.imdabigboss.easycraft.perks.RavelPerk;
@@ -25,6 +24,7 @@ public class EasyCraft extends JavaPlugin {
 	private static Ravel1984Manager ravel1984Manager = null;
 	private static MiniBlockManager miniBlockManager = null;
 	private static LanguageManager languageManager = null;
+	private static NPCManager npcManager = null;
 
 	private static boolean easyDatapackInstalled = false;
 	private static String serverName = ChatColor.RED + "ERROR";
@@ -54,33 +54,19 @@ public class EasyCraft extends JavaPlugin {
 		pluginMessageManager = new PluginMessageManager();
 		miniBlockManager = new MiniBlockManager();
 		languageManager = new LanguageManager();
+		npcManager = new NPCManager();
+		npcManager.load();
 
 		this.getServer().getPluginManager().registerEvents(new EventListener(), this);
 		this.getServer().getPluginManager().registerEvents(new DeathMessages(), this);
 		if (serverName.equals("lobby")) {
 			this.getServer().getPluginManager().registerEvents(new LobbyEvents(), this);
-
-			this.getLogger().info("Lobby mode is enabled.");
+			this.getLogger().info("Lobby mode enabled.");
 		}
 
-		if (this.getConfig().contains("enable1984")) {
-			if (this.getConfig().getBoolean("enable1984")) {
-				ravel1984Manager = new Ravel1984Manager();
-				this.getServer().getPluginManager().registerEvents(new Ravel1984Listener(ravel1984Manager), this);
-
-				if (this.getConfig().contains("enable1984-path")) {
-					ravel1984Manager.setLogPath(this.getConfig().getString("enable1984-path"));
-				} else {
-					this.getConfig().set("enable1984-path", ravel1984Manager.getLogPath());
-					this.saveConfig();
-				}
-
-				this.getLogger().info("Ravel1984 is enabled! Logging to " + ravel1984Manager.getLogPath());
-			}
-		}
-
-		if (!configManager.getConfig("homes").getConfig().contains("maxHomes")) {
-			configManager.getConfig("homes").getConfig().set("maxHomes", 2);
+		if (this.getConfig().contains("enable1984") && this.getConfig().getBoolean("enable1984")) {
+			ravel1984Manager = new Ravel1984Manager();
+			this.getLogger().info("Ravel 1984 enabled!");
 		}
 
 		perksManager = new PerksManager();
@@ -105,6 +91,8 @@ public class EasyCraft extends JavaPlugin {
 		}
 
 		pluginMessageManager.close();
+
+		npcManager.unload();
 	}
 
 	public static EasyCraft getInstance() {
@@ -153,6 +141,10 @@ public class EasyCraft extends JavaPlugin {
 
 	public static LanguageManager getLanguageManager() {
 		return languageManager;
+	}
+
+	public static NPCManager getNPCManager() {
+		return npcManager;
 	}
 
 	public static boolean isEasyDatapackInstalled() {

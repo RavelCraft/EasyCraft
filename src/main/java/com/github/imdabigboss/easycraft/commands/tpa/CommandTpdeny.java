@@ -2,6 +2,7 @@ package com.github.imdabigboss.easycraft.commands.tpa;
 
 import com.github.imdabigboss.easycraft.EasyCraft;
 import com.github.imdabigboss.easycraft.managers.TpaManager;
+import com.github.imdabigboss.easycraft.utils.PlayerMessage;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -19,22 +20,21 @@ public class CommandTpdeny implements CommandExecutor {
 			} else {
 				int out = tpaUtils.tpaDeny(player);
 				if (out == 0) {
-					sender.sendMessage("You denied the tpa request!");
+					sender.sendMessage(PlayerMessage.formatMessage(PlayerMessage.COMMAND_TPA_REQ_DENIED_SENDER, sender));
 				} else if (out == 1) {
-					sender.sendMessage(ChatColor.RED + "You do not have any pending tpa requests!");
+					sender.sendMessage(PlayerMessage.formatMessage(PlayerMessage.COMMAND_TPA_NO_REQ, sender));
 				} else if (out == 2) {
-					sender.sendMessage("You denied the tpa request, but the player was no longer online anyway.");
+					sender.sendMessage(PlayerMessage.formatMessage(PlayerMessage.COMMAND_TPA_PLAYER_NO_LONGER_ONLINE, sender));
 				}
 
 			}
 		} else {
-			sender.sendMessage(ChatColor.RED + "You must be a player to run this command!");
+			sender.sendMessage(PlayerMessage.formatMessage(PlayerMessage.COMMAND_MUST_BE_PLAYER, sender));
 		}
 		return true;
 	}
 
 	public void sendHelp(CommandSender sender) {
-		sender.sendMessage("The correct usage is:");
-		sender.sendMessage("/tpdeny");
+		sender.sendMessage(PlayerMessage.formatMessage(PlayerMessage.COMMAND_TPA_DENY_HELP, sender));
 	}
 }

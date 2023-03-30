@@ -17,7 +17,7 @@ public class TpaManager {
 		if (this.plugin.getConfig().contains("tpa-keep-alive")) {
 			this.requestKeepAlive = this.plugin.getConfig().getLong("tpa-keep-alive");
 		} else {
-			this.plugin.getServer().getConsoleSender().sendMessage(ChatColor.RED + "You have not specified a tpa keep alive time. Set it with tpa-keep-alive in config.yml!");
+			EasyCraft.getLog().warning("You have not specified a tpa keep alive time. Set it with tpa-keep-alive in config.yml!");
 			this.requestKeepAlive = 30;
 		}
 	}

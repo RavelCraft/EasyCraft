@@ -1,5 +1,6 @@
 package com.github.imdabigboss.easycraft.commands;
 
+import com.github.imdabigboss.easycraft.utils.PlayerMessage;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -20,7 +21,7 @@ public class CommandHeadItem implements CommandExecutor {
 			inv.setHelmet(handItem);
 			inv.setItemInMainHand(headItem);
 		} else {
-			sender.sendMessage(ChatColor.RED + "You must be a player to run this command!");
+			sender.sendMessage(PlayerMessage.formatMessage(PlayerMessage.COMMAND_MUST_BE_PLAYER, sender));
 		}
 		return true;
 	}

@@ -1,6 +1,7 @@
 package com.github.imdabigboss.easycraft.commands;
 
 import com.github.imdabigboss.easycraft.EasyCraft;
+import com.github.imdabigboss.easycraft.utils.PlayerMessage;
 import net.kyori.adventure.text.Component;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -15,49 +16,44 @@ import java.util.List;
 public class CommandMaintenance implements CommandExecutor, TabExecutor {
 	private final EasyCraft plugin = EasyCraft.getInstance();
 
-	private static final String MAINTENANCE = "maintenance";
-
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		if (args.length != 1) {
 			this.sendHelp(sender);
 		} else {
 			if (args[0].equalsIgnoreCase("on")) {
-				this.plugin.getConfig().set(MAINTENANCE, "on");
+				this.plugin.getConfig().set("maintenance", "on");
 				this.plugin.saveConfig();
 
-				sender.sendMessage(ChatColor.AQUA + "Turned on maintenance mode!");
-				this.kickPlayers(sender.getName());
+				sender.sendMessage(PlayerMessage.formatMessage(PlayerMessage.COMMAND_MAINTENANCE_ENABLED, sender));
+
+				for (Player p : plugin.getServer().getOnlinePlayers()) {
+					if (!p.isOp()) {
+						p.kick(PlayerMessage.formatMessage(PlayerMessage.COMMAND_MAINTENANCE_ENABLED_KICK, p));
+					}
+				}
+
+				for (Player p : plugin.getServer().getOnlinePlayers()) {
+					sender.sendMessage(PlayerMessage.formatMessage(PlayerMessage.COMMAND_MAINTENANCE_ENABLED_BROADCAST, p, sender.getName()));
+				}
 			} else {
 				if (!args[0].equalsIgnoreCase("off")) {
 					this.sendHelp(sender);
 					return true;
 				}
 
-				this.plugin.getConfig().set(MAINTENANCE, "off");
+				this.plugin.getConfig().set("maintenance", "off");
 				this.plugin.saveConfig();
 
-				sender.sendMessage(ChatColor.AQUA + "Turned off maintenance mode!");
+				sender.sendMessage(PlayerMessage.formatMessage(PlayerMessage.COMMAND_MAINTENANCE_DISABLED, sender));
+
 				for (Player p : plugin.getServer().getOnlinePlayers()) {
-					p.sendMessage(ChatColor.AQUA + sender.getName() + " has disabled maintenance mode!");
+					p.sendMessage(PlayerMessage.formatMessage(PlayerMessage.COMMAND_MAINTENANCE_DISABLED_BROADCAST, p, sender.getName()));
 				}
 			}
 
 		}
 		return true;
-	}
-
-	private void kickPlayers(String player) {
-		for (Player p : plugin.getServer().getOnlinePlayers()) {
-			if (!p.isOp()) {
-				p.kick(Component.text("We very sorry " + ChatColor.YELLOW + p.getName() + ChatColor.RESET + " but the server has been put under " + ChatColor.RED + "maintenance mode"));
-			}
-		}
-
-		for (Player p : plugin.getServer().getOnlinePlayers()) {
-			p.sendMessage(ChatColor.AQUA + player + " has enabled maintenance mode!");
-		}
-
 	}
 
 	@Override
@@ -73,7 +69,6 @@ public class CommandMaintenance implements CommandExecutor, TabExecutor {
 	}
 
 	public void sendHelp(CommandSender sender) {
-		sender.sendMessage("Maintenance mode is " + this.plugin.getConfig().get(MAINTENANCE));
-		sender.sendMessage("You may set maintenance mode using 'on' or 'off'!");
+		sender.sendMessage(PlayerMessage.formatMessage(PlayerMessage.COMMAND_MAINTENANCE_HELP, sender, this.plugin.getConfig().get("maintenance") + ""));
 	}
 }
