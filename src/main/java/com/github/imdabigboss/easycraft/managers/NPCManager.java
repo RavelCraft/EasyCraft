@@ -54,6 +54,7 @@ public class NPCManager {
                 case COMMAND -> npc.addRunConsoleCommandClickAction(action);
                 case MESSAGE -> npc.addMessageClickAction(action);
                 case SERVER -> npc.addConnectBungeeServerClickAction(action);
+                case PLAYER_COMMAND -> npc.addRunPlayerCommandClickAction(action);
                 default -> throw new RuntimeException("Invalid ActionType: " + actionType);
             }
         }
@@ -141,6 +142,7 @@ public class NPCManager {
 
     public enum ActionType {
         COMMAND,
+        PLAYER_COMMAND,
         MESSAGE,
         SERVER
     }

@@ -13,17 +13,21 @@ public class SpeedBoostPerk extends RavelPerk {
 
     public SpeedBoostPerk() {
         super(NAME, 2, false);
-
-        if (EasyCraft.isEasyDatapackInstalled()) {
-            this.item = EasyDatapackAPI.getItemManager().getItemStack("speed_boost");
-        }
     }
 
     @Override
     public boolean getPerk(Player player, String[] args) {
         if (this.item == null) {
-            player.sendMessage(ChatColor.RED + "Something is strange, please contact a member of staff.");
-            return false;
+            if (EasyCraft.isEasyDatapackInstalled()) {
+                try {
+                    this.item = EasyDatapackAPI.getItemManager().getCustomItem("speed_boost").createItemStack();
+                } catch (Exception e) {
+                    player.sendMessage(ChatColor.RED + "Something is strange, please contact a member of staff.");
+                    e.printStackTrace();
+                    this.item = null;
+                    return false;
+                }
+            }
         }
 
         if (args.length != 0) {

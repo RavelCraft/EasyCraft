@@ -38,6 +38,11 @@ public class CommandNPC implements CommandExecutor, TabExecutor {
                 return true;
             }
 
+            if (args.length < 4) {
+                this.sendHelp(sender);
+                return true;
+            }
+
             Player player = (Player) sender;
 
             String text = args[2];

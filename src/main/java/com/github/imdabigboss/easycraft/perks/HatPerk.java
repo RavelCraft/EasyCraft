@@ -2,8 +2,8 @@ package com.github.imdabigboss.easycraft.perks;
 
 import com.github.imdabigboss.easycraft.EasyCraft;
 import com.github.imdabigboss.easydatapack.api.EasyDatapackAPI;
-import com.github.imdabigboss.easydatapack.api.items.CustomHatItem;
-import com.github.imdabigboss.easydatapack.api.items.CustomItem;
+import com.github.imdabigboss.easydatapack.api.types.items.CustomHatItem;
+import com.github.imdabigboss.easydatapack.api.types.items.CustomItem;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -22,7 +22,7 @@ public class HatPerk extends RavelPerk {
         if (EasyCraft.isEasyDatapackInstalled()) {
             for (CustomItem item : EasyDatapackAPI.getItemManager().getCustomItems()) {
                 if (item instanceof CustomHatItem) {
-                    this.hats.put(item.getNamespaceKey(), item.getItemStack());
+                    this.hats.put(item.getNamespaceKey(), item.createItemStack());
                 }
             }
         }
@@ -30,9 +30,21 @@ public class HatPerk extends RavelPerk {
 
     @Override
     public boolean getPerk(Player player, String[] args) {
-        if (!EasyCraft.isEasyDatapackInstalled()) {
-            player.sendMessage(ChatColor.RED + "Something is strange, please contact a member of staff.");
-            return false;
+        if (this.hats.size() == 0) {
+            if (EasyCraft.isEasyDatapackInstalled()) {
+                try {
+                    for (CustomItem item : EasyDatapackAPI.getItemManager().getCustomItems()) {
+                        if (item instanceof CustomHatItem) {
+                            this.hats.put(item.getNamespaceKey(), item.createItemStack());
+                        }
+                    }
+                } catch (Exception e) {
+                    player.sendMessage(ChatColor.RED + "Something is strange, please contact a member of staff.");
+                    e.printStackTrace();
+                    this.hats.clear();
+                    return false;
+                }
+            }
         }
 
         if (args.length == 0) {
